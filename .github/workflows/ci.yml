@@ -73,14 +73,15 @@ jobs:
 
       - name: Sync web_static
         run: |
-          rm -rf internal/managementasset/web_static
-          cp -r web/out internal/managementasset/web_static
+          find internal/managementasset/web_static -type f ! -name README.md -delete
+          find internal/managementasset/web_static -type d -empty -delete
+          cp -r web/out/* internal/managementasset/web_static/
 
       - name: Check embedded assets are up to date
         run: |
-          if [ -n "$(git diff --name-only internal/managementasset/web_static)" ]; then
+          if [ -n "$(git diff --name-only internal/managementasset/web_static -- . ':!internal/managementasset/web_static/README.md')" ]; then
             echo "::error::Embedded web assets are out of date. Run: cp -r web/out internal/managementasset/web_static"
-            git diff --stat internal/managementasset/web_static
+            git diff --stat internal/managementasset/web_static -- . ':!internal/managementasset/web_static/README.md'
             exit 1
           fi
           echo "Embedded assets are up to date."
