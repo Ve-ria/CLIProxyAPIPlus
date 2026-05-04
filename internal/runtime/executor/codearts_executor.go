@@ -308,6 +308,7 @@ func (e *CodeArtsExecutor) ExecuteStream(ctx context.Context, auth *cliproxyauth
 		var firstNonEmptyLine string
 		var accumulatedContent strings.Builder
 		var hasToolCalls bool
+		var xmlDetected bool
 
 		scanner := bufio.NewScanner(httpResp.Body)
 		scanner.Buffer(make([]byte, 0, 1024*1024), 1024*1024)
@@ -343,9 +344,16 @@ func (e *CodeArtsExecutor) ExecuteStream(ctx context.Context, auth *cliproxyauth
 
 			if content := gjson.Get(data, "delta.content").String(); content != "" {
 				accumulatedContent.WriteString(content)
+				if !xmlDetected && strings.Contains(accumulatedContent.String(), "<tool_call_id>") {
+					xmlDetected = true
+				}
 			}
 			if tcResult := gjson.Get(data, "delta.tool_calls"); tcResult.Exists() && len(tcResult.Array()) > 0 {
 				hasToolCalls = true
+			}
+
+			if xmlDetected && !hasToolCalls {
+				continue
 			}
 
 			openAIChunk := convertCodeArtsSSEToOpenAI(data, req.Model)
@@ -361,7 +369,7 @@ func (e *CodeArtsExecutor) ExecuteStream(ctx context.Context, auth *cliproxyauth
 			}
 		}
 
-		if !hasToolCalls && strings.Contains(accumulatedContent.String(), "<tool_call_id>") {
+		if !hasToolCalls && xmlDetected {
 			xmlToolCalls := parseXMLToolCalls(accumulatedContent.String())
 			if len(xmlToolCalls) > 0 {
 				hasToolCalls = true
@@ -667,7 +675,7 @@ func buildCodeArtsPayload(openaiPayload []byte, modelName, agentID, userID strin
 	var codeArtsMessages []map[string]string
 	for _, msg := range messages.Array() {
 		role := msg.Get("role").String()
-		content := msg.Get("content").String()
+		content := extractTextContent(msg.Get("content"))
 
 		var formattedContent string
 		switch role {
@@ -677,14 +685,16 @@ func buildCodeArtsPayload(openaiPayload []byte, modelName, agentID, userID strin
 			toolCalls := msg.Get("tool_calls")
 			if toolCalls.Exists() && len(toolCalls.Array()) > 0 {
 				var parts []string
-				parts = append(parts, "[Assistant]\n"+content)
+				if content != "" {
+					parts = append(parts, content)
+				}
 				for _, tc := range toolCalls.Array() {
 					name := tc.Get("function.name").String()
 					id := tc.Get("id").String()
 					args := tc.Get("function.arguments").String()
 					parts = append(parts, fmt.Sprintf("[Tool Call: %s] (id: %s)\n%s", name, id, args))
 				}
-				formattedContent = strings.Join(parts, "\n")
+				formattedContent = "[Assistant]\n" + strings.Join(parts, "\n")
 			} else {
 				formattedContent = "[Assistant]\n" + content
 			}
@@ -782,6 +792,13 @@ func convertCodeArtsSSEToOpenAI(data string, model string) []byte {
 	reasoningContent := delta.Get("reasoning_content").String()
 	toolCallsResult := delta.Get("tool_calls")
 	hasToolCalls := toolCallsResult.Exists() && len(toolCallsResult.Array()) > 0
+
+	if hasToolCalls {
+		content = ""
+	}
+	if reasoningContent != "" {
+		content = ""
+	}
 
 	if content == "" && reasoningContent == "" && !hasToolCalls {
 		role := delta.Get("role").String()
