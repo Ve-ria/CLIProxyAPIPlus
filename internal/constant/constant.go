@@ -33,4 +33,7 @@ const (
 
 	// CodeArts represents the HuaweiCloud CodeArts IDE provider identifier.
 	CodeArts = "codearts"
+
+	// JoyCode represents the JD JoyCode provider identifier.
+	JoyCode = "joycode"
 )

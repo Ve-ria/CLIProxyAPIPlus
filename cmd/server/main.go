@@ -100,6 +100,7 @@ func main() {
 	var btLogin bool
 	var qoderLogin bool
 	var codeartsLogin bool
+	var joycodeLogin bool
 	var projectID string
 	var vertexImport string
 	var vertexImportPrefix string
@@ -143,6 +144,7 @@ func main() {
 	flag.BoolVar(&btLogin, "bt-login", false, "Login to BaoTa Panel AI using phone and password")
 	flag.BoolVar(&qoderLogin, "qoder-login", false, "Login to Qoder using PKCE browser flow")
 	flag.BoolVar(&codeartsLogin, "codearts-login", false, "Login to HuaweiCloud CodeArts using OAuth")
+	flag.BoolVar(&joycodeLogin, "joycode-login", false, "Login to JoyCode using OAuth")
 	flag.StringVar(&projectID, "project_id", "", "Project ID (Gemini only, not required)")
 	flag.StringVar(&configPath, "config", DefaultConfigPath, "Configure File Path")
 	flag.StringVar(&vertexImport, "vertex-import", "", "Import Vertex service account key JSON file")
@@ -599,6 +601,8 @@ func main() {
 		cmd.DoQoderLogin(cfg, options)
 	} else if codeartsLogin {
 		cmd.DoCodeArtsLogin(cfg, options)
+	} else if joycodeLogin {
+		cmd.DoJoyCodeLogin(cfg, options)
 	} else {
 		// In cloud deploy mode without config file, just wait for shutdown signals
 		if isCloudDeploy && !configFileExists {

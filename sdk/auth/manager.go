@@ -102,6 +102,12 @@ var providerMetadata = map[string]ProviderInfo{
 		FlowType:        "web_oauth",
 		AuthURLEndpoint: "",
 	},
+	"joycode": {
+		Key:             "joycode",
+		DisplayName:     "JoyCode",
+		FlowType:        "web_oauth",
+		AuthURLEndpoint: "",
+	},
 	"kilo": {
 		Key:             "kilo",
 		DisplayName:     "Kilo",

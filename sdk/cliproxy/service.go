@@ -450,6 +450,8 @@ func (s *Service) ensureExecutorsForAuthWithMode(a *coreauth.Auth, forceReplace 
 		s.coreManager.RegisterExecutor(executor.NewCodeBuddyAIExecutor(s.cfg))
 	case "codearts":
 		s.coreManager.RegisterExecutor(executor.NewCodeArtsExecutor(s.cfg))
+	case "joycode":
+		s.coreManager.RegisterExecutor(executor.NewJoyCodeExecutor(s.cfg))
 	case "gitlab":
 		s.coreManager.RegisterExecutor(executor.NewGitLabExecutor(s.cfg))
 	case "bt":
@@ -993,6 +995,9 @@ func (s *Service) registerModelsForAuth(a *coreauth.Auth) {
 		models = applyExcludedModels(models, excluded)
 	case "codearts":
 		models = getCodeArtsModels()
+		models = applyExcludedModels(models, excluded)
+	case "joycode":
+		models = getJoyCodeModels()
 		models = applyExcludedModels(models, excluded)
 	case "gitlab":
 		models = executor.GitLabModelsFromAuth(a)

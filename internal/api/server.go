@@ -27,6 +27,7 @@ import (
 	"github.com/router-for-me/CLIProxyAPI/v6/internal/api/modules"
 	ampmodule "github.com/router-for-me/CLIProxyAPI/v6/internal/api/modules/amp"
 	"github.com/router-for-me/CLIProxyAPI/v6/internal/auth/codearts"
+	"github.com/router-for-me/CLIProxyAPI/v6/internal/auth/joycode"
 	"github.com/router-for-me/CLIProxyAPI/v6/internal/auth/kiro"
 	"github.com/router-for-me/CLIProxyAPI/v6/internal/cache"
 	"github.com/router-for-me/CLIProxyAPI/v6/internal/config"
@@ -316,6 +317,11 @@ func NewServer(cfg *config.Config, authManager *auth.Manager, accessManager *sdk
 	codeArtsOAuthHandler := codearts.NewOAuthWebHandler(cfg)
 	codeArtsOAuthHandler.RegisterRoutes(engine)
 	log.Info("CodeArts OAuth Web routes registered at /v0/oauth/codearts/*")
+
+	// === CLIProxyAPIPlus extension: Register JoyCode OAuth Web routes ===
+	joyCodeOAuthHandler := joycode.NewOAuthWebHandler(cfg)
+	joyCodeOAuthHandler.RegisterRoutes(engine)
+	log.Info("JoyCode OAuth Web routes registered at /v0/oauth/joycode/*")
 
 	if optionState.keepAliveEnabled {
 		s.enableKeepAlive(optionState.keepAliveTimeout, optionState.keepAliveOnTimeout)

@@ -20,6 +20,7 @@ func init() {
 	registerRefreshLead("cursor", func() Authenticator { return NewCursorAuthenticator() })
 	registerRefreshLead("qoder", func() Authenticator { return NewQoderAuthenticator() })
 	registerRefreshLead("codearts", func() Authenticator { return NewCodeArtsAuthenticator() })
+	registerRefreshLead("joycode", func() Authenticator { return NewJoyCodeAuthenticator() })
 }
 
 func registerRefreshLead(provider string, factory func() Authenticator) {
