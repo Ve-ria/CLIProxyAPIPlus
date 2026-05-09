@@ -2,6 +2,7 @@
 
 import { type ReactNode } from "react";
 import { AuthProvider } from "@/lib/auth-context";
+import { LocaleProvider } from "@/lib/locale-context";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { ThemeProvider } from "next-themes";
@@ -14,12 +15,14 @@ export function ClientProviders({ children }: { children: ReactNode }) {
       enableSystem
       disableTransitionOnChange
     >
-      <AuthProvider>
-        <TooltipProvider>
-          {children}
-          <Toaster />
-        </TooltipProvider>
-      </AuthProvider>
+      <LocaleProvider>
+        <AuthProvider>
+          <TooltipProvider>
+            {children}
+            <Toaster />
+          </TooltipProvider>
+        </AuthProvider>
+      </LocaleProvider>
     </ThemeProvider>
   );
 }

@@ -13,6 +13,8 @@ import {
   Plus,
   X,
 } from "lucide-react";
+import { t } from "@/lib/i18n";
+import { useLocale } from "@/lib/locale-context";
 
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -60,21 +62,21 @@ function statusBadge(status: string) {
   if (lower === "active") {
     return (
       <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-        active
+        {t("authFiles.active")}
       </Badge>
     );
   }
   if (lower === "error") {
     return (
       <Badge className="bg-red-500/10 text-red-600 dark:text-red-400">
-        error
+        {t("authFiles.error")}
       </Badge>
     );
   }
   if (lower === "disabled") {
     return (
       <Badge className="bg-yellow-500/10 text-yellow-600 dark:text-yellow-400">
-        disabled
+        {t("authFiles.disabled")}
       </Badge>
     );
   }
@@ -141,6 +143,7 @@ function formDataToFields(data: EditFormData): Record<string, string> {
 }
 
 export default function AuthFilesPage() {
+  useLocale();
   const [files, setFiles] = useState<AuthFile[]>([]);
   const [loading, setLoading] = useState(true);
   const fetchIdRef = useRef(0);
@@ -333,7 +336,7 @@ export default function AuthFilesPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <FileKey2 className="size-5 text-muted-foreground" />
-          <h1 className="text-lg font-semibold">Auth Files</h1>
+          <h1 className="text-lg font-semibold">{t("authFiles.title")}</h1>
         </div>
         <div className="flex items-center gap-2">
           {files.length > 0 && (
@@ -343,28 +346,27 @@ export default function AuthFilesPage() {
               onClick={() => setDeleteAllOpen(true)}
             >
               <Trash2 />
-              Delete All
+              {t("authFiles.deleteAll")}
             </Button>
           )}
           <Button size="sm" onClick={() => setUploadOpen(true)}>
             <Upload />
-            Upload Auth File
+            {t("authFiles.upload")}
           </Button>
         </div>
       </div>
-
       {loading ? (
         <div className="rounded-lg border">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Provider</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Email / Account</TableHead>
-                <TableHead>Priority</TableHead>
-                <TableHead>Note</TableHead>
-                <TableHead className="w-12">Enabled</TableHead>
+                <TableHead>{t("authFiles.provider")}</TableHead>
+                <TableHead>{t("authFiles.name")}</TableHead>
+                <TableHead>{t("authFiles.status")}</TableHead>
+                <TableHead>{t("authFiles.email")}</TableHead>
+                <TableHead>{t("authFiles.priority")}</TableHead>
+                <TableHead>{t("authFiles.note")}</TableHead>
+                <TableHead className="w-12">{t("authFiles.enabled")}</TableHead>
                 <TableHead className="w-12" />
               </TableRow>
             </TableHeader>
@@ -388,7 +390,7 @@ export default function AuthFilesPage() {
         <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-12 text-center">
           <FileKey2 className="size-10 text-muted-foreground/50" />
           <p className="text-sm text-muted-foreground">
-            No auth files found. Upload an auth file to get started.
+            {t("authFiles.noAuthFilesFound")}
           </p>
         </div>
       ) : (
@@ -396,13 +398,13 @@ export default function AuthFilesPage() {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Provider</TableHead>
-                <TableHead>Name</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Email / Account</TableHead>
-                <TableHead>Priority</TableHead>
-                <TableHead>Note</TableHead>
-                <TableHead className="w-12">Enabled</TableHead>
+                <TableHead>{t("authFiles.provider")}</TableHead>
+                <TableHead>{t("authFiles.name")}</TableHead>
+                <TableHead>{t("authFiles.status")}</TableHead>
+                <TableHead>{t("authFiles.email")}</TableHead>
+                <TableHead>{t("authFiles.priority")}</TableHead>
+                <TableHead>{t("authFiles.note")}</TableHead>
+                <TableHead className="w-12">{t("authFiles.enabled")}</TableHead>
                 <TableHead className="w-12" />
               </TableRow>
             </TableHeader>
@@ -413,13 +415,13 @@ export default function AuthFilesPage() {
                   <TableCell className="font-medium">{file.name}</TableCell>
                   <TableCell>{statusBadge(file.status)}</TableCell>
                   <TableCell className="text-muted-foreground">
-                    {file.fields?.email || file.fields?.account || file.fields?.["email-or-account"] || "—"}
+                    {file.fields?.email || file.fields?.account || file.fields?.["email-or-account"] || "\u2014"}
                   </TableCell>
                   <TableCell className="text-muted-foreground">
-                    {file.fields?.priority ?? "—"}
+                    {file.fields?.priority ?? "\u2014"}
                   </TableCell>
                   <TableCell className="max-w-[200px] truncate text-muted-foreground">
-                    {file.fields?.note || "—"}
+                    {file.fields?.note || "\u2014"}
                   </TableCell>
                   <TableCell>
                     <Switch
@@ -439,11 +441,11 @@ export default function AuthFilesPage() {
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => openEdit(file)}>
                           <Pencil />
-                          Edit
+                          {t("common.edit")}
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleToggle(file)}>
                           <Power />
-                          {file.disabled ? "Enable" : "Disable"}
+                          {file.disabled ? t("authFiles.enable") : t("authFiles.disable")}
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
                         <DropdownMenuItem
@@ -451,7 +453,7 @@ export default function AuthFilesPage() {
                           onClick={() => setDeleteTarget(file)}
                         >
                           <Trash2 />
-                          Delete
+                          {t("common.delete")}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -462,13 +464,12 @@ export default function AuthFilesPage() {
           </Table>
         </div>
       )}
-
       <Dialog open={uploadOpen} onOpenChange={setUploadOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Upload Auth File</DialogTitle>
+            <DialogTitle>{t("authFiles.upload")}</DialogTitle>
             <DialogDescription>
-              Select one or more .json auth files to upload.
+              {t("authFiles.selectFiles")}
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-4">
@@ -486,10 +487,10 @@ export default function AuthFilesPage() {
               onClick={() => setUploadOpen(false)}
               disabled={uploading}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button onClick={handleUpload} disabled={uploading}>
-              {uploading ? "Uploading..." : "Upload"}
+              {uploading ? t("authFiles.uploading") : t("common.upload")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -503,23 +504,23 @@ export default function AuthFilesPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Auth File</AlertDialogTitle>
+            <AlertDialogTitle>{t("authFiles.deleteAuthFile")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete{" "}
+              {t("authFiles.deleteConfirm")}{" "}
               <span className="font-medium text-foreground">
                 {deleteTarget?.name}
               </span>{" "}
-              ({deleteTarget?.provider})? This action cannot be undone.
+              ({deleteTarget?.provider})? {t("common.cannotUndo")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleting}>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
               disabled={deleting}
               className="bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40"
             >
-              {deleting ? "Deleting..." : "Delete"}
+              {deleting ? t("authFiles.deleting") : t("common.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -531,33 +532,31 @@ export default function AuthFilesPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete All Auth Files</AlertDialogTitle>
+            <AlertDialogTitle>{t("authFiles.deleteAllAuthFiles")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete all {files.length} auth file(s)?
-              This action cannot be undone.
+              {t("authFiles.deleteAllConfirm").replace("{count}", String(files.length))}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleting}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleting}>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteAll}
               disabled={deleting}
               className="bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40"
             >
-              {deleting ? "Deleting..." : "Delete All"}
+              {deleting ? t("authFiles.deleting") : t("authFiles.deleteAll")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-
       <Dialog open={editTarget !== null} onOpenChange={(open) => {
         if (!open) setEditTarget(null);
       }}>
         <DialogContent className="sm:max-w-lg">
           <DialogHeader>
-            <DialogTitle>Edit Auth File</DialogTitle>
+            <DialogTitle>{t("authFiles.editAuthFile")}</DialogTitle>
             <DialogDescription>
-              Modify fields for{" "}
+              {t("authFiles.modifyFieldsFor")}{" "}
               <span className="font-medium text-foreground">
                 {editTarget?.name}
               </span>{" "}
@@ -566,18 +565,18 @@ export default function AuthFilesPage() {
           </DialogHeader>
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="edit-prefix">Prefix</Label>
+              <Label htmlFor="edit-prefix">{t("authFiles.prefix")}</Label>
               <Input
                 id="edit-prefix"
                 value={editForm.prefix}
                 onChange={(e) =>
                   setEditForm((prev) => ({ ...prev, prefix: e.target.value }))
                 }
-                placeholder="Model prefix"
+                placeholder={t("authFiles.modelPrefix")}
               />
             </div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="edit-proxy-url">Proxy URL</Label>
+              <Label htmlFor="edit-proxy-url">{t("authFiles.proxyUrl")}</Label>
               <Input
                 id="edit-proxy-url"
                 value={editForm.proxy_url}
@@ -588,20 +587,20 @@ export default function AuthFilesPage() {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <Label>Headers</Label>
+              <Label>{t("authFiles.headers")}</Label>
               <div className="flex flex-col gap-2">
                 {editForm.headers.map((entry, i) => (
                   <div key={i} className="flex items-center gap-2">
                     <Input
                       value={entry.key}
                       onChange={(e) => updateHeaderEntry(i, "key", e.target.value)}
-                      placeholder="Header name"
+                      placeholder={t("authFiles.headerName")}
                       className="flex-1"
                     />
                     <Input
                       value={entry.value}
                       onChange={(e) => updateHeaderEntry(i, "value", e.target.value)}
-                      placeholder="Header value"
+                      placeholder={t("authFiles.headerValue")}
                       className="flex-1"
                     />
                     <Button
@@ -621,12 +620,12 @@ export default function AuthFilesPage() {
                   className="self-start"
                 >
                   <Plus />
-                  Add Header
+                  {t("authFiles.addHeader")}
                 </Button>
               </div>
             </div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="edit-priority">Priority</Label>
+              <Label htmlFor="edit-priority">{t("authFiles.priority")}</Label>
               <Input
                 id="edit-priority"
                 type="number"
@@ -638,14 +637,14 @@ export default function AuthFilesPage() {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="edit-note">Note</Label>
+              <Label htmlFor="edit-note">{t("authFiles.note")}</Label>
               <Textarea
                 id="edit-note"
                 value={editForm.note}
                 onChange={(e) =>
                   setEditForm((prev) => ({ ...prev, note: e.target.value }))
                 }
-                placeholder="Optional note"
+                placeholder={t("authFiles.optionalNote")}
                 rows={3}
               />
             </div>
@@ -656,10 +655,10 @@ export default function AuthFilesPage() {
               onClick={() => setEditTarget(null)}
               disabled={saving}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button onClick={handleSaveEdit} disabled={saving}>
-              {saving ? "Saving..." : "Save"}
+              {saving ? t("common.saving") : t("common.save")}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -13,6 +13,8 @@ import {
   type AmpUpstreamAPIKeyEntry,
 } from "@/lib/api";
 import { toast } from "sonner";
+import { t } from "@/lib/i18n";
+import { useLocale } from "@/lib/locale-context";
 import {
   Key,
   Eye,
@@ -430,25 +432,25 @@ function ProviderKeyForm({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-2">
-        <Label htmlFor="pk-api-key">API Key</Label>
+        <Label htmlFor="pk-api-key">{t("apiKeys.apiKey")}</Label>
         <Input
           id="pk-api-key"
           value={form.apiKey}
           onChange={(e) => updateField("apiKey", e.target.value)}
-          placeholder="Enter API key"
+          placeholder={t("apiKeys.enterApiKey")}
         />
       </div>
       <div className="flex flex-col gap-2">
-        <Label htmlFor="pk-prefix">Prefix</Label>
+        <Label htmlFor="pk-prefix">{t("apiKeys.prefix")}</Label>
         <Input
           id="pk-prefix"
           value={form.prefix}
           onChange={(e) => updateField("prefix", e.target.value)}
-          placeholder="Model prefix"
+          placeholder={t("authFiles.modelPrefix")}
         />
       </div>
       <div className="flex flex-col gap-2">
-        <Label htmlFor="pk-base-url">Base URL</Label>
+        <Label htmlFor="pk-base-url">{t("apiKeys.baseUrl")}</Label>
         <Input
           id="pk-base-url"
           value={form.baseUrl}
@@ -457,7 +459,7 @@ function ProviderKeyForm({
         />
       </div>
       <div className="flex flex-col gap-2">
-        <Label htmlFor="pk-proxy-url">Proxy URL</Label>
+        <Label htmlFor="pk-proxy-url">{t("apiKeys.proxyUrl")}</Label>
         <Input
           id="pk-proxy-url"
           value={form.proxyUrl}
@@ -466,7 +468,7 @@ function ProviderKeyForm({
         />
       </div>
       <div className="flex flex-col gap-2">
-        <Label htmlFor="pk-priority">Priority</Label>
+        <Label htmlFor="pk-priority">{t("apiKeys.priority")}</Label>
         <Input
           id="pk-priority"
           type="number"
@@ -482,75 +484,75 @@ function ProviderKeyForm({
             checked={form.websockets}
             onCheckedChange={(checked) => updateField("websockets", checked)}
           />
-          <Label>Use WebSockets</Label>
+           <Label>{t("apiKeys.useWebsockets")}</Label>
         </div>
       )}
-      <div className="flex flex-col gap-2">
-        <Label>Model Aliases</Label>
+       <div className="flex flex-col gap-2">
+         <Label>{t("apiKeys.modelAliases")}</Label>
         <div className="flex flex-col gap-2">
-          {form.models.map((m, i) => (
-            <div key={i} className="flex items-center gap-2">
-              <Input
-                value={m.name}
-                onChange={(e) => updateModel(i, "name", e.target.value)}
-                placeholder="Model name"
-                className="flex-1"
-              />
-              <Input
-                value={m.alias}
-                onChange={(e) => updateModel(i, "alias", e.target.value)}
-                placeholder="Alias"
-                className="flex-1"
-              />
-              <Button
-                variant="ghost"
-                size="icon-xs"
-                onClick={() => removeModel(i)}
-              >
-                <X />
-              </Button>
-            </div>
-          ))}
-          <Button variant="outline" size="xs" onClick={addModel} className="self-start">
-            <Plus />
-            Add Model Alias
-          </Button>
+           {form.models.map((m, i) => (
+             <div key={i} className="flex items-center gap-2">
+               <Input
+                 value={m.name}
+                 onChange={(e) => updateModel(i, "name", e.target.value)}
+                placeholder={t("apiKeys.modelName")}
+                 className="flex-1"
+               />
+               <Input
+                 value={m.alias}
+                 onChange={(e) => updateModel(i, "alias", e.target.value)}
+                placeholder={t("apiKeys.alias")}
+                 className="flex-1"
+               />
+               <Button
+                 variant="ghost"
+                 size="icon-xs"
+                 onClick={() => removeModel(i)}
+               >
+                 <X />
+               </Button>
+             </div>
+           ))}
+           <Button variant="outline" size="xs" onClick={addModel} className="self-start">
+             <Plus />
+            {t("apiKeys.addModelAlias")}
+           </Button>
         </div>
-      </div>
-      <div className="flex flex-col gap-2">
-        <Label>Headers</Label>
+       </div>
+       <div className="flex flex-col gap-2">
+         <Label>{t("apiKeys.headers")}</Label>
         <div className="flex flex-col gap-2">
-          {form.headers.map((h, i) => (
-            <div key={i} className="flex items-center gap-2">
-              <Input
-                value={h.key}
-                onChange={(e) => updateHeader(i, "key", e.target.value)}
-                placeholder="Header name"
-                className="flex-1"
-              />
-              <Input
-                value={h.value}
-                onChange={(e) => updateHeader(i, "value", e.target.value)}
-                placeholder="Header value"
-                className="flex-1"
-              />
-              <Button
-                variant="ghost"
-                size="icon-xs"
-                onClick={() => removeHeader(i)}
-              >
-                <X />
-              </Button>
-            </div>
-          ))}
-          <Button variant="outline" size="xs" onClick={addHeader} className="self-start">
-            <Plus />
-            Add Header
-          </Button>
+           {form.headers.map((h, i) => (
+             <div key={i} className="flex items-center gap-2">
+               <Input
+                 value={h.key}
+                 onChange={(e) => updateHeader(i, "key", e.target.value)}
+                placeholder={t("apiKeys.headerName")}
+                 className="flex-1"
+               />
+               <Input
+                 value={h.value}
+                 onChange={(e) => updateHeader(i, "value", e.target.value)}
+                placeholder={t("apiKeys.headerValue")}
+                 className="flex-1"
+               />
+               <Button
+                 variant="ghost"
+                 size="icon-xs"
+                 onClick={() => removeHeader(i)}
+               >
+                 <X />
+               </Button>
+             </div>
+           ))}
+           <Button variant="outline" size="xs" onClick={addHeader} className="self-start">
+             <Plus />
+            {t("apiKeys.addHeader")}
+           </Button>
         </div>
-      </div>
-      <div className="flex flex-col gap-2">
-        <Label htmlFor="pk-excluded-models">Excluded Models</Label>
+       </div>
+       <div className="flex flex-col gap-2">
+         <Label htmlFor="pk-excluded-models">{t("apiKeys.excludedModels")}</Label>
         <Input
           id="pk-excluded-models"
           value={form.excludedModels}
@@ -641,25 +643,25 @@ function OpenAICompatForm({
   return (
     <div className="flex flex-col gap-4">
       <div className="flex flex-col gap-2">
-        <Label htmlFor="oac-name">Name</Label>
+        <Label htmlFor="oac-name">{t("apiKeys.name")}</Label>
         <Input
           id="oac-name"
           value={form.name}
           onChange={(e) => updateField("name", e.target.value)}
-          placeholder="Provider name"
+          placeholder={t("apiKeys.providerName")}
         />
       </div>
       <div className="flex flex-col gap-2">
-        <Label htmlFor="oac-prefix">Prefix</Label>
+        <Label htmlFor="oac-prefix">{t("apiKeys.prefix")}</Label>
         <Input
           id="oac-prefix"
           value={form.prefix}
           onChange={(e) => updateField("prefix", e.target.value)}
-          placeholder="Model prefix"
+          placeholder={t("authFiles.modelPrefix")}
         />
       </div>
       <div className="flex flex-col gap-2">
-        <Label htmlFor="oac-base-url">Base URL</Label>
+        <Label htmlFor="oac-base-url">{t("apiKeys.baseUrl")}</Label>
         <Input
           id="oac-base-url"
           value={form.baseUrl}
@@ -668,7 +670,7 @@ function OpenAICompatForm({
         />
       </div>
       <div className="flex flex-col gap-2">
-        <Label htmlFor="oac-priority">Priority</Label>
+        <Label htmlFor="oac-priority">{t("apiKeys.priority")}</Label>
         <Input
           id="oac-priority"
           type="number"
@@ -678,20 +680,20 @@ function OpenAICompatForm({
         />
       </div>
       <div className="flex flex-col gap-2">
-        <Label>API Key Entries</Label>
+        <Label>{t("apiKeys.apiKeyEntries")}</Label>
         <div className="flex flex-col gap-2">
           {form.apiKeyEntries.map((entry, i) => (
             <div key={i} className="flex items-center gap-2">
               <Input
                 value={entry.apiKey}
                 onChange={(e) => updateApiKeyEntry(i, "apiKey", e.target.value)}
-                placeholder="API key"
+                placeholder={t("apiKeys.apiKey")}
                 className="flex-1"
               />
               <Input
                 value={entry.proxyUrl}
                 onChange={(e) => updateApiKeyEntry(i, "proxyUrl", e.target.value)}
-                placeholder="Proxy URL (optional)"
+                placeholder={t("apiKeys.proxyUrl")}
                 className="flex-1"
               />
               <Button
@@ -706,72 +708,72 @@ function OpenAICompatForm({
           ))}
           <Button variant="outline" size="xs" onClick={addApiKeyEntry} className="self-start">
             <Plus />
-            Add API Key Entry
+            {t("apiKeys.addApiKeyEntry")}
           </Button>
         </div>
       </div>
       <div className="flex flex-col gap-2">
-        <Label>Model Aliases</Label>
+         <Label>{t("apiKeys.modelAliases")}</Label>
         <div className="flex flex-col gap-2">
-          {form.models.map((m, i) => (
-            <div key={i} className="flex items-center gap-2">
-              <Input
-                value={m.name}
-                onChange={(e) => updateModel(i, "name", e.target.value)}
-                placeholder="Model name"
-                className="flex-1"
-              />
-              <Input
-                value={m.alias}
-                onChange={(e) => updateModel(i, "alias", e.target.value)}
-                placeholder="Alias"
-                className="flex-1"
-              />
-              <Button
-                variant="ghost"
-                size="icon-xs"
-                onClick={() => removeModel(i)}
-              >
-                <X />
-              </Button>
-            </div>
-          ))}
-          <Button variant="outline" size="xs" onClick={addModel} className="self-start">
-            <Plus />
-            Add Model Alias
-          </Button>
+           {form.models.map((m, i) => (
+             <div key={i} className="flex items-center gap-2">
+               <Input
+                 value={m.name}
+                 onChange={(e) => updateModel(i, "name", e.target.value)}
+                placeholder={t("apiKeys.modelName")}
+                 className="flex-1"
+               />
+               <Input
+                 value={m.alias}
+                 onChange={(e) => updateModel(i, "alias", e.target.value)}
+                placeholder={t("apiKeys.alias")}
+                 className="flex-1"
+               />
+               <Button
+                 variant="ghost"
+                 size="icon-xs"
+                 onClick={() => removeModel(i)}
+               >
+                 <X />
+               </Button>
+             </div>
+           ))}
+           <Button variant="outline" size="xs" onClick={addModel} className="self-start">
+             <Plus />
+            {t("apiKeys.addModelAlias")}
+           </Button>
         </div>
-      </div>
-      <div className="flex flex-col gap-2">
-        <Label>Headers</Label>
+       </div>
+       <div className="flex flex-col gap-2">
+         <Label>{t("apiKeys.headers")}</Label>
         <div className="flex flex-col gap-2">
-          {form.headers.map((h, i) => (
-            <div key={i} className="flex items-center gap-2">
-              <Input
-                value={h.key}
-                onChange={(e) => updateHeader(i, "key", e.target.value)}
-                placeholder="Header name"
-                className="flex-1"
-              />
-              <Input
-                value={h.value}
-                onChange={(e) => updateHeader(i, "value", e.target.value)}
-                placeholder="Header value"
-                className="flex-1"
-              />
-              <Button
-                variant="ghost"
-                size="icon-xs"
-                onClick={() => removeHeader(i)}
-              >
-                <X />
-              </Button>
-            </div>
-          ))}
-          <Button variant="outline" size="xs" onClick={addHeader} className="self-start">
-            <Plus />
-            Add Header
-          </Button>
+           {form.headers.map((h, i) => (
+             <div key={i} className="flex items-center gap-2">
+               <Input
+                 value={h.key}
+                 onChange={(e) => updateHeader(i, "key", e.target.value)}
+                placeholder={t("apiKeys.headerName")}
+                 className="flex-1"
+               />
+               <Input
+                 value={h.value}
+                 onChange={(e) => updateHeader(i, "value", e.target.value)}
+                placeholder={t("apiKeys.headerValue")}
+                 className="flex-1"
+               />
+               <Button
+                 variant="ghost"
+                 size="icon-xs"
+                 onClick={() => removeHeader(i)}
+               >
+                 <X />
+               </Button>
+             </div>
+           ))}
+           <Button variant="outline" size="xs" onClick={addHeader} className="self-start">
+             <Plus />
+            {t("apiKeys.addHeader")}
+           </Button>
         </div>
       </div>
     </div>
@@ -807,6 +809,8 @@ const DELETE_ACTION_CLASS =
   "bg-destructive/10 text-destructive hover:bg-destructive/20 focus-visible:border-destructive/40 focus-visible:ring-destructive/20 dark:bg-destructive/20 dark:hover:bg-destructive/30 dark:focus-visible:ring-destructive/40";
 
 export default function APIKeysPage() {
+  useLocale();
+
   // ─── Tab 1: API Keys ───
   const [apiKeys, setApiKeys] = useState<string[]>([]);
   const [apiKeysLoading, setApiKeysLoading] = useState(true);
@@ -1596,14 +1600,14 @@ export default function APIKeysPage() {
     <div className="flex flex-col gap-6">
       <div className="flex items-center gap-2">
         <Key className="size-5 text-muted-foreground" />
-        <h1 className="text-lg font-semibold">API Keys</h1>
+        <h1 className="text-lg font-semibold">{t("apiKeys.title")}</h1>
       </div>
 
       <Tabs defaultValue="api-keys" className="w-full">
         <TabsList className="flex flex-wrap gap-1">
           <TabsTrigger value="api-keys" className="gap-1.5">
             <Key className="size-3.5" />
-            API Keys
+            {t("apiKeys.title")}
           </TabsTrigger>
           <TabsTrigger value="gemini" className="gap-1.5">
             <Sparkles className="size-3.5" />
@@ -1635,11 +1639,11 @@ export default function APIKeysPage() {
         <TabsContent value="api-keys" className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
-              Simple API key strings for authentication
+              {t("apiKeys.simpleDesc")}
             </p>
             <Button size="sm" onClick={() => setAddKeyOpen(true)}>
               <Plus />
-              Add Key
+              {t("apiKeys.addKey")}
             </Button>
           </div>
 
@@ -1649,7 +1653,7 @@ export default function APIKeysPage() {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-12">#</TableHead>
-                    <TableHead>Key</TableHead>
+                    <TableHead>{t("apiKeys.key")}</TableHead>
                     <TableHead className="w-16" />
                   </TableRow>
                 </TableHeader>
@@ -1661,7 +1665,7 @@ export default function APIKeysPage() {
           ) : apiKeys.length === 0 ? (
             <EmptyState
               icon={<Key className="size-10" />}
-              message="No API keys configured. Add a key to get started."
+              message={t("apiKeys.noKeys")}
             />
           ) : (
             <div className="rounded-lg border">
@@ -1669,7 +1673,7 @@ export default function APIKeysPage() {
                 <TableHeader>
                   <TableRow>
                     <TableHead className="w-12">#</TableHead>
-                    <TableHead>Key</TableHead>
+                    <TableHead>{t("apiKeys.key")}</TableHead>
                     <TableHead className="w-16" />
                   </TableRow>
                 </TableHeader>
@@ -1702,11 +1706,11 @@ export default function APIKeysPage() {
         <TabsContent value="gemini" className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
-              Gemini API key entries with optional prefix and proxy
+              {t("apiKeys.geminiDesc")}
             </p>
             <Button size="sm" onClick={openGeminiAdd}>
               <Plus />
-              Add Key
+              {t("apiKeys.addKey")}
             </Button>
           </div>
 
@@ -1715,10 +1719,10 @@ export default function APIKeysPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>API Key</TableHead>
-                    <TableHead>Prefix</TableHead>
-                    <TableHead>Base URL</TableHead>
-                    <TableHead>Proxy URL</TableHead>
+                    <TableHead>{t("apiKeys.apiKey")}</TableHead>
+                    <TableHead>{t("apiKeys.prefix")}</TableHead>
+                    <TableHead>{t("apiKeys.baseUrl")}</TableHead>
+                    <TableHead>{t("apiKeys.proxyUrl")}</TableHead>
                     <TableHead className="w-20" />
                   </TableRow>
                 </TableHeader>
@@ -1730,17 +1734,17 @@ export default function APIKeysPage() {
           ) : geminiKeys.length === 0 ? (
             <EmptyState
               icon={<Sparkles className="size-10" />}
-              message="No Gemini keys configured. Add a key to get started."
+              message={t("apiKeys.noGeminiKeys")}
             />
           ) : (
             <div className="rounded-lg border">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>API Key</TableHead>
-                    <TableHead>Prefix</TableHead>
-                    <TableHead>Base URL</TableHead>
-                    <TableHead>Proxy URL</TableHead>
+                    <TableHead>{t("apiKeys.apiKey")}</TableHead>
+                    <TableHead>{t("apiKeys.prefix")}</TableHead>
+                    <TableHead>{t("apiKeys.baseUrl")}</TableHead>
+                    <TableHead>{t("apiKeys.proxyUrl")}</TableHead>
                     <TableHead className="w-20" />
                   </TableRow>
                 </TableHeader>
@@ -1795,11 +1799,11 @@ export default function APIKeysPage() {
         <TabsContent value="claude" className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
-              Claude API key entries with model aliases
+              {t("apiKeys.claudeDesc")}
             </p>
             <Button size="sm" onClick={openClaudeAdd}>
               <Plus />
-              Add Key
+              {t("apiKeys.addKey")}
             </Button>
           </div>
 
@@ -1808,10 +1812,10 @@ export default function APIKeysPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>API Key</TableHead>
-                    <TableHead>Prefix</TableHead>
-                    <TableHead>Base URL</TableHead>
-                    <TableHead>Models</TableHead>
+                    <TableHead>{t("apiKeys.apiKey")}</TableHead>
+                    <TableHead>{t("apiKeys.prefix")}</TableHead>
+                    <TableHead>{t("apiKeys.baseUrl")}</TableHead>
+                    <TableHead>{t("models.aliases")}</TableHead>
                     <TableHead className="w-20" />
                   </TableRow>
                 </TableHeader>
@@ -1823,17 +1827,17 @@ export default function APIKeysPage() {
           ) : claudeKeys.length === 0 ? (
             <EmptyState
               icon={<Bot className="size-10" />}
-              message="No Claude keys configured. Add a key to get started."
+              message={t("apiKeys.noClaudeKeys")}
             />
           ) : (
             <div className="rounded-lg border">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>API Key</TableHead>
-                    <TableHead>Prefix</TableHead>
-                    <TableHead>Base URL</TableHead>
-                    <TableHead>Models</TableHead>
+                    <TableHead>{t("apiKeys.apiKey")}</TableHead>
+                    <TableHead>{t("apiKeys.prefix")}</TableHead>
+                    <TableHead>{t("apiKeys.baseUrl")}</TableHead>
+                    <TableHead>{t("models.aliases")}</TableHead>
                     <TableHead className="w-20" />
                   </TableRow>
                 </TableHeader>
@@ -1892,11 +1896,11 @@ export default function APIKeysPage() {
         <TabsContent value="codex" className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
-              Codex API key entries with WebSocket support
+              {t("apiKeys.codexDesc")}
             </p>
             <Button size="sm" onClick={openCodexAdd}>
               <Plus />
-              Add Key
+              {t("apiKeys.addKey")}
             </Button>
           </div>
 
@@ -1905,11 +1909,11 @@ export default function APIKeysPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>API Key</TableHead>
-                    <TableHead>Prefix</TableHead>
-                    <TableHead>Base URL</TableHead>
-                    <TableHead>Models</TableHead>
-                    <TableHead>WebSocket</TableHead>
+                    <TableHead>{t("apiKeys.apiKey")}</TableHead>
+                    <TableHead>{t("apiKeys.prefix")}</TableHead>
+                    <TableHead>{t("apiKeys.baseUrl")}</TableHead>
+                    <TableHead>{t("models.aliases")}</TableHead>
+                    <TableHead>{t("apiKeys.useWebsockets")}</TableHead>
                     <TableHead className="w-20" />
                   </TableRow>
                 </TableHeader>
@@ -1921,18 +1925,18 @@ export default function APIKeysPage() {
           ) : codexKeys.length === 0 ? (
             <EmptyState
               icon={<Code2 className="size-10" />}
-              message="No Codex keys configured. Add a key to get started."
+              message={t("apiKeys.noCodexKeys")}
             />
           ) : (
             <div className="rounded-lg border">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>API Key</TableHead>
-                    <TableHead>Prefix</TableHead>
-                    <TableHead>Base URL</TableHead>
-                    <TableHead>Models</TableHead>
-                    <TableHead>WebSocket</TableHead>
+                    <TableHead>{t("apiKeys.apiKey")}</TableHead>
+                    <TableHead>{t("apiKeys.prefix")}</TableHead>
+                    <TableHead>{t("apiKeys.baseUrl")}</TableHead>
+                    <TableHead>{t("models.aliases")}</TableHead>
+                    <TableHead>{t("apiKeys.useWebsockets")}</TableHead>
                     <TableHead className="w-20" />
                   </TableRow>
                 </TableHeader>
@@ -1962,10 +1966,10 @@ export default function APIKeysPage() {
                       <TableCell>
                         {key.websockets ? (
                           <Badge className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
-                            On
+                            {t("apiKeys.on")}
                           </Badge>
                         ) : (
-                          <span className="text-muted-foreground">Off</span>
+                          <span className="text-muted-foreground">{t("apiKeys.off")}</span>
                         )}
                       </TableCell>
                       <TableCell>
@@ -2000,16 +2004,16 @@ export default function APIKeysPage() {
         <TabsContent value="vertex" className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
-              Vertex AI API key entries with service account import
+              {t("apiKeys.vertexDesc")}
             </p>
             <div className="flex items-center gap-2">
               <Button variant="outline" size="sm" onClick={() => setVertexImportOpen(true)}>
                 <Upload />
-                Import Credential
+                {t("apiKeys.importCredential")}
               </Button>
               <Button size="sm" onClick={openVertexAdd}>
                 <Plus />
-                Add Key
+                {t("apiKeys.addKey")}
               </Button>
             </div>
           </div>
@@ -2019,10 +2023,10 @@ export default function APIKeysPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>API Key</TableHead>
-                    <TableHead>Prefix</TableHead>
-                    <TableHead>Base URL</TableHead>
-                    <TableHead>Models</TableHead>
+                    <TableHead>{t("apiKeys.apiKey")}</TableHead>
+                    <TableHead>{t("apiKeys.prefix")}</TableHead>
+                    <TableHead>{t("apiKeys.baseUrl")}</TableHead>
+                    <TableHead>{t("models.aliases")}</TableHead>
                     <TableHead className="w-20" />
                   </TableRow>
                 </TableHeader>
@@ -2034,17 +2038,17 @@ export default function APIKeysPage() {
           ) : vertexKeys.length === 0 ? (
             <EmptyState
               icon={<Cloud className="size-10" />}
-              message="No Vertex keys configured. Add a key or import credentials to get started."
+              message={t("apiKeys.noVertexKeys")}
             />
           ) : (
             <div className="rounded-lg border">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>API Key</TableHead>
-                    <TableHead>Prefix</TableHead>
-                    <TableHead>Base URL</TableHead>
-                    <TableHead>Models</TableHead>
+                    <TableHead>{t("apiKeys.apiKey")}</TableHead>
+                    <TableHead>{t("apiKeys.prefix")}</TableHead>
+                    <TableHead>{t("apiKeys.baseUrl")}</TableHead>
+                    <TableHead>{t("models.aliases")}</TableHead>
                     <TableHead className="w-20" />
                   </TableRow>
                 </TableHeader>
@@ -2103,11 +2107,11 @@ export default function APIKeysPage() {
         <TabsContent value="openai-compat" className="flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <p className="text-sm text-muted-foreground">
-              OpenAI-compatible provider entries
+              {t("apiKeys.openaiCompatDesc")}
             </p>
             <Button size="sm" onClick={openOACAdd}>
               <Plus />
-              Add Entry
+              {t("common.add")}
             </Button>
           </div>
 
@@ -2116,10 +2120,10 @@ export default function APIKeysPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Prefix</TableHead>
-                    <TableHead>Base URL</TableHead>
-                    <TableHead>API Keys</TableHead>
+                    <TableHead>{t("apiKeys.name")}</TableHead>
+                    <TableHead>{t("apiKeys.prefix")}</TableHead>
+                    <TableHead>{t("apiKeys.baseUrl")}</TableHead>
+                    <TableHead>{t("apiKeys.title")}</TableHead>
                     <TableHead className="w-20" />
                   </TableRow>
                 </TableHeader>
@@ -2131,17 +2135,17 @@ export default function APIKeysPage() {
           ) : openAICompat.length === 0 ? (
             <EmptyState
               icon={<Layers className="size-10" />}
-              message="No OpenAI compatibility entries. Add an entry to get started."
+              message={t("apiKeys.noOpenAICompat")}
             />
           ) : (
             <div className="rounded-lg border">
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Name</TableHead>
-                    <TableHead>Prefix</TableHead>
-                    <TableHead>Base URL</TableHead>
-                    <TableHead>API Keys</TableHead>
+                    <TableHead>{t("apiKeys.name")}</TableHead>
+                    <TableHead>{t("apiKeys.prefix")}</TableHead>
+                    <TableHead>{t("apiKeys.baseUrl")}</TableHead>
+                    <TableHead>{t("apiKeys.title")}</TableHead>
                     <TableHead className="w-20" />
                   </TableRow>
                 </TableHeader>
@@ -2216,10 +2220,10 @@ export default function APIKeysPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Globe className="size-4" />
-                    Upstream URL
+                    {t("apiKeys.upstreamUrl")}
                   </CardTitle>
                   <CardDescription>
-                    The upstream proxy URL for AmpCode requests
+                    {t("apiKeys.upstreamUrlDesc")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -2236,7 +2240,7 @@ export default function APIKeysPage() {
                       disabled={ampSavingURL}
                     >
                       <Save />
-                      Save
+                      {t("common.save")}
                     </Button>
                     <Button
                       variant="outline"
@@ -2245,7 +2249,7 @@ export default function APIKeysPage() {
                       disabled={ampSavingURL || !ampUpstreamURL}
                     >
                       <Eraser />
-                      Clear
+                      {t("common.clear")}
                     </Button>
                   </div>
                 </CardContent>
@@ -2255,10 +2259,10 @@ export default function APIKeysPage() {
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Key className="size-4" />
-                    Upstream API Key
+                    {t("apiKeys.upstreamApiKey")}
                   </CardTitle>
                   <CardDescription>
-                    The API key for upstream AmpCode authentication
+                    {t("apiKeys.upstreamApiKeyDesc")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -2276,7 +2280,7 @@ export default function APIKeysPage() {
                       disabled={ampSavingAPIKey}
                     >
                       <Save />
-                      Save
+                      {t("common.save")}
                     </Button>
                     <Button
                       variant="outline"
@@ -2285,7 +2289,7 @@ export default function APIKeysPage() {
                       disabled={ampSavingAPIKey || !ampUpstreamAPIKey}
                     >
                       <Eraser />
-                      Clear
+                      {t("common.clear")}
                     </Button>
                   </div>
                 </CardContent>
@@ -2293,9 +2297,9 @@ export default function APIKeysPage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Restrict Management to Localhost</CardTitle>
+                  <CardTitle>{t("apiKeys.restrictLocalhost")}</CardTitle>
                   <CardDescription>
-                    Only allow management API access from localhost
+                    {t("apiKeys.restrictLocalhostDesc")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -2307,7 +2311,7 @@ export default function APIKeysPage() {
                       disabled={ampSavingSwitch}
                     />
                     <span className="text-sm text-muted-foreground">
-                      {ampRestrictLocalhost ? "Enabled" : "Disabled"}
+                      {ampRestrictLocalhost ? t("common.enabled") : t("common.disabled")}
                     </span>
                   </div>
                 </CardContent>
@@ -2315,9 +2319,9 @@ export default function APIKeysPage() {
 
               <Card>
                 <CardHeader>
-                  <CardTitle>Force Model Mappings</CardTitle>
+                  <CardTitle>{t("apiKeys.forceModelMappings")}</CardTitle>
                   <CardDescription>
-                    Force all model requests through the defined mappings
+                    {t("apiKeys.forceModelMappingsDesc")}
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -2329,7 +2333,7 @@ export default function APIKeysPage() {
                       disabled={ampSavingSwitch}
                     />
                     <span className="text-sm text-muted-foreground">
-                      {ampForceMappings ? "Enabled" : "Disabled"}
+                      {ampForceMappings ? t("common.enabled") : t("common.disabled")}
                     </span>
                   </div>
                 </CardContent>
@@ -2341,30 +2345,30 @@ export default function APIKeysPage() {
                     <div>
                       <CardTitle className="flex items-center gap-2">
                         <ArrowRight className="size-4" />
-                        Model Mappings
+                        {t("apiKeys.modelMappings")}
                       </CardTitle>
                       <CardDescription>
-                        Map model names from source to target
+                        {t("apiKeys.modelMappingsDesc")}
                       </CardDescription>
                     </div>
                     <Button size="sm" onClick={openAmpMappingAdd}>
                       <Plus />
-                      Add Mapping
+                      {t("apiKeys.addMapping")}
                     </Button>
                   </div>
                 </CardHeader>
                 <CardContent>
                   {ampModelMappings.length === 0 ? (
                     <p className="text-sm text-muted-foreground text-center py-4">
-                      No model mappings configured
+                      {t("models.noAliases")}
                     </p>
                   ) : (
                     <div className="rounded-lg border">
                       <Table>
                         <TableHeader>
                           <TableRow>
-                            <TableHead>From</TableHead>
-                            <TableHead>To</TableHead>
+                            <TableHead>{t("apiKeys.from")}</TableHead>
+                            <TableHead>{t("apiKeys.to")}</TableHead>
                             <TableHead className="w-20" />
                           </TableRow>
                         </TableHeader>
@@ -2408,30 +2412,30 @@ export default function APIKeysPage() {
                     <div>
                       <CardTitle className="flex items-center gap-2">
                         <Key className="size-4" />
-                        Upstream API Keys
+                        {t("apiKeys.upstreamApiKeys")}
                       </CardTitle>
                       <CardDescription>
-                        Upstream API key entries with associated local API keys
+                        {t("apiKeys.upstreamApiKeysDesc")}
                       </CardDescription>
                     </div>
                     <Button size="sm" onClick={openAmpUpstreamKeyAdd}>
                       <Plus />
-                      Add Key
+                      {t("apiKeys.addKey")}
                     </Button>
                   </div>
                 </CardHeader>
                 <CardContent>
                   {ampUpstreamAPIKeys.length === 0 ? (
                     <p className="text-sm text-muted-foreground text-center py-4">
-                      No upstream API keys configured
+                      {t("apiKeys.noKeys")}
                     </p>
                   ) : (
                     <div className="rounded-lg border">
                       <Table>
                         <TableHeader>
                           <TableRow>
-                            <TableHead>Upstream Key</TableHead>
-                            <TableHead>API Keys</TableHead>
+                            <TableHead>{t("apiKeys.upstreamKey")}</TableHead>
+                            <TableHead>{t("apiKeys.title")}</TableHead>
                             <TableHead className="w-20" />
                           </TableRow>
                         </TableHeader>
@@ -2493,19 +2497,19 @@ export default function APIKeysPage() {
       <Dialog open={addKeyOpen} onOpenChange={setAddKeyOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Add API Key</DialogTitle>
+            <DialogTitle>{t("apiKeys.addApiKey")}</DialogTitle>
             <DialogDescription>
               Enter a new API key to add to the configuration.
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="new-api-key">API Key</Label>
+              <Label htmlFor="new-api-key">{t("apiKeys.apiKey")}</Label>
               <Input
                 id="new-api-key"
                 value={newKeyValue}
                 onChange={(e) => setNewKeyValue(e.target.value)}
-                placeholder="Enter API key"
+                placeholder={t("apiKeys.enterApiKey")}
               />
             </div>
           </div>
@@ -2515,10 +2519,10 @@ export default function APIKeysPage() {
               onClick={() => setAddKeyOpen(false)}
               disabled={addKeySaving}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button onClick={handleAddKey} disabled={addKeySaving || !newKeyValue.trim()}>
-              {addKeySaving ? "Adding..." : "Add Key"}
+              {addKeySaving ? t("common.saving") : t("apiKeys.addKey")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -2533,19 +2537,19 @@ export default function APIKeysPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete API Key</AlertDialogTitle>
+            <AlertDialogTitle>{`${t("common.delete")} API ${t("apiKeys.key")}`}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this API key? This action cannot be undone.
+              {`${t("apiKeys.deleteConfirm")} ${t("apiKeys.key").toLowerCase()}? ${t("common.cannotUndo")}`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleteKeySaving}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleteKeySaving}>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteKey}
               disabled={deleteKeySaving}
               className={DELETE_ACTION_CLASS}
             >
-              {deleteKeySaving ? "Deleting..." : "Delete"}
+              {deleteKeySaving ? t("authFiles.deleting") : t("common.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -2556,7 +2560,7 @@ export default function APIKeysPage() {
         <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {geminiEditIndex !== null ? "Edit Gemini Key" : "Add Gemini Key"}
+              {geminiEditIndex !== null ? t("apiKeys.editGeminiKey") : t("apiKeys.addGeminiKey")}
             </DialogTitle>
             <DialogDescription>
               {geminiEditIndex !== null
@@ -2571,10 +2575,10 @@ export default function APIKeysPage() {
               onClick={() => setGeminiFormOpen(false)}
               disabled={geminiSaving}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button onClick={handleGeminiSave} disabled={geminiSaving}>
-              {geminiSaving ? "Saving..." : "Save"}
+              {geminiSaving ? t("common.saving") : t("common.save")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -2589,19 +2593,19 @@ export default function APIKeysPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Gemini Key</AlertDialogTitle>
+            <AlertDialogTitle>{t("apiKeys.deleteGeminiKey")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this Gemini key? This action cannot be undone.
+              {`${t("apiKeys.deleteConfirm")} Gemini ${t("apiKeys.key").toLowerCase()}? ${t("common.cannotUndo")}`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleteGeminiSaving}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleteGeminiSaving}>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteGemini}
               disabled={deleteGeminiSaving}
               className={DELETE_ACTION_CLASS}
             >
-              {deleteGeminiSaving ? "Deleting..." : "Delete"}
+              {deleteGeminiSaving ? t("authFiles.deleting") : t("common.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -2612,7 +2616,7 @@ export default function APIKeysPage() {
         <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {claudeEditIndex !== null ? "Edit Claude Key" : "Add Claude Key"}
+              {claudeEditIndex !== null ? t("apiKeys.editClaudeKey") : t("apiKeys.addClaudeKey")}
             </DialogTitle>
             <DialogDescription>
               {claudeEditIndex !== null
@@ -2627,10 +2631,10 @@ export default function APIKeysPage() {
               onClick={() => setClaudeFormOpen(false)}
               disabled={claudeSaving}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button onClick={handleClaudeSave} disabled={claudeSaving}>
-              {claudeSaving ? "Saving..." : "Save"}
+              {claudeSaving ? t("common.saving") : t("common.save")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -2645,19 +2649,19 @@ export default function APIKeysPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Claude Key</AlertDialogTitle>
+            <AlertDialogTitle>{t("apiKeys.deleteClaudeKey")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this Claude key? This action cannot be undone.
+              {`${t("apiKeys.deleteConfirm")} Claude ${t("apiKeys.key").toLowerCase()}? ${t("common.cannotUndo")}`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleteClaudeSaving}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleteClaudeSaving}>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteClaude}
               disabled={deleteClaudeSaving}
               className={DELETE_ACTION_CLASS}
             >
-              {deleteClaudeSaving ? "Deleting..." : "Delete"}
+              {deleteClaudeSaving ? t("authFiles.deleting") : t("common.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -2668,7 +2672,7 @@ export default function APIKeysPage() {
         <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {codexEditIndex !== null ? "Edit Codex Key" : "Add Codex Key"}
+              {codexEditIndex !== null ? t("apiKeys.editCodexKey") : t("apiKeys.addCodexKey")}
             </DialogTitle>
             <DialogDescription>
               {codexEditIndex !== null
@@ -2683,10 +2687,10 @@ export default function APIKeysPage() {
               onClick={() => setCodexFormOpen(false)}
               disabled={codexSaving}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button onClick={handleCodexSave} disabled={codexSaving}>
-              {codexSaving ? "Saving..." : "Save"}
+              {codexSaving ? t("common.saving") : t("common.save")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -2701,19 +2705,19 @@ export default function APIKeysPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Codex Key</AlertDialogTitle>
+            <AlertDialogTitle>{t("apiKeys.deleteCodexKey")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this Codex key? This action cannot be undone.
+              {`${t("apiKeys.deleteConfirm")} Codex ${t("apiKeys.key").toLowerCase()}? ${t("common.cannotUndo")}`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleteCodexSaving}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleteCodexSaving}>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteCodex}
               disabled={deleteCodexSaving}
               className={DELETE_ACTION_CLASS}
             >
-              {deleteCodexSaving ? "Deleting..." : "Delete"}
+              {deleteCodexSaving ? t("authFiles.deleting") : t("common.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -2724,7 +2728,7 @@ export default function APIKeysPage() {
         <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {vertexEditIndex !== null ? "Edit Vertex Key" : "Add Vertex Key"}
+              {vertexEditIndex !== null ? t("apiKeys.editVertexKey") : t("apiKeys.addVertexKey")}
             </DialogTitle>
             <DialogDescription>
               {vertexEditIndex !== null
@@ -2739,10 +2743,10 @@ export default function APIKeysPage() {
               onClick={() => setVertexFormOpen(false)}
               disabled={vertexSaving}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button onClick={handleVertexSave} disabled={vertexSaving}>
-              {vertexSaving ? "Saving..." : "Save"}
+              {vertexSaving ? t("common.saving") : t("common.save")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -2757,19 +2761,19 @@ export default function APIKeysPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Vertex Key</AlertDialogTitle>
+            <AlertDialogTitle>{t("apiKeys.deleteVertexKey")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this Vertex key? This action cannot be undone.
+              {`${t("apiKeys.deleteConfirm")} Vertex ${t("apiKeys.key").toLowerCase()}? ${t("common.cannotUndo")}`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleteVertexSaving}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleteVertexSaving}>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteVertex}
               disabled={deleteVertexSaving}
               className={DELETE_ACTION_CLASS}
             >
-              {deleteVertexSaving ? "Deleting..." : "Delete"}
+              {deleteVertexSaving ? t("authFiles.deleting") : t("common.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -2779,9 +2783,9 @@ export default function APIKeysPage() {
       <Dialog open={vertexImportOpen} onOpenChange={setVertexImportOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Import Vertex Credentials</DialogTitle>
+            <DialogTitle>{t("apiKeys.importVertexCredentials")}</DialogTitle>
             <DialogDescription>
-              Upload a Google Cloud service account JSON file to import Vertex AI credentials.
+              {t("apiKeys.importVertexDesc")}
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-4">
@@ -2798,10 +2802,10 @@ export default function APIKeysPage() {
               onClick={() => setVertexImportOpen(false)}
               disabled={vertexImporting}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button onClick={handleVertexImport} disabled={vertexImporting}>
-              {vertexImporting ? "Importing..." : "Import"}
+              {vertexImporting ? t("usage.importing") : t("usage.import")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -2812,7 +2816,7 @@ export default function APIKeysPage() {
         <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>
-              {oacEditIndex !== null ? "Edit OpenAI Compatibility Entry" : "Add OpenAI Compatibility Entry"}
+              {oacEditIndex !== null ? t("apiKeys.editOpenAICompat") : t("apiKeys.addOpenAICompat")}
             </DialogTitle>
             <DialogDescription>
               {oacEditIndex !== null
@@ -2827,10 +2831,10 @@ export default function APIKeysPage() {
               onClick={() => setOACFormOpen(false)}
               disabled={oacSaving}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button onClick={handleOACSave} disabled={oacSaving}>
-              {oacSaving ? "Saving..." : "Save"}
+              {oacSaving ? t("common.saving") : t("common.save")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -2845,23 +2849,23 @@ export default function APIKeysPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete OpenAI Compatibility Entry</AlertDialogTitle>
+            <AlertDialogTitle>{t("apiKeys.deleteOpenAICompat")}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete{" "}
+              {t("apiKeys.deleteConfirm")}{" "}
               <span className="font-medium text-foreground">
                 {deleteOACTarget?.entry.name}
               </span>
-              ? This action cannot be undone.
+              ? {t("common.cannotUndo")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleteOACSaving}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleteOACSaving}>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteOAC}
               disabled={deleteOACSaving}
               className={DELETE_ACTION_CLASS}
             >
-              {deleteOACSaving ? "Deleting..." : "Delete"}
+              {deleteOACSaving ? t("authFiles.deleting") : t("common.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -2872,7 +2876,7 @@ export default function APIKeysPage() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>
-              {ampMappingEditIndex !== null ? "Edit Model Mapping" : "Add Model Mapping"}
+              {ampMappingEditIndex !== null ? t("models.editAlias") : t("apiKeys.addMapping")}
             </DialogTitle>
             <DialogDescription>
               Map a source model name to a target model name.
@@ -2880,7 +2884,7 @@ export default function APIKeysPage() {
           </DialogHeader>
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="amp-mapping-from">From</Label>
+              <Label htmlFor="amp-mapping-from">{t("apiKeys.from")}</Label>
               <Input
                 id="amp-mapping-from"
                 value={ampMappingFrom}
@@ -2889,7 +2893,7 @@ export default function APIKeysPage() {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="amp-mapping-to">To</Label>
+              <Label htmlFor="amp-mapping-to">{t("apiKeys.to")}</Label>
               <Input
                 id="amp-mapping-to"
                 value={ampMappingTo}
@@ -2904,10 +2908,10 @@ export default function APIKeysPage() {
               onClick={() => setAmpMappingFormOpen(false)}
               disabled={ampMappingSaving}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button onClick={handleAmpMappingSave} disabled={ampMappingSaving}>
-              {ampMappingSaving ? "Saving..." : "Save"}
+              {ampMappingSaving ? t("common.saving") : t("common.save")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -2922,9 +2926,9 @@ export default function APIKeysPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Model Mapping</AlertDialogTitle>
+            <AlertDialogTitle>{`${t("common.delete")} ${t("apiKeys.modelMappings")}`}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete the mapping from{" "}
+              {t("apiKeys.deleteConfirm")}{" "}
               <span className="font-medium text-foreground">
                 {deleteAmpMappingTarget !== null ? ampModelMappings[deleteAmpMappingTarget]?.from : ""}
               </span>{" "}
@@ -2932,17 +2936,17 @@ export default function APIKeysPage() {
               <span className="font-medium text-foreground">
                 {deleteAmpMappingTarget !== null ? ampModelMappings[deleteAmpMappingTarget]?.to : ""}
               </span>
-              ? This action cannot be undone.
+              ? {t("common.cannotUndo")}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleteAmpMappingSaving}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleteAmpMappingSaving}>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteAmpMapping}
               disabled={deleteAmpMappingSaving}
               className={DELETE_ACTION_CLASS}
             >
-              {deleteAmpMappingSaving ? "Deleting..." : "Delete"}
+              {deleteAmpMappingSaving ? t("authFiles.deleting") : t("common.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
@@ -2953,7 +2957,7 @@ export default function APIKeysPage() {
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle>
-              {ampUpstreamKeyEditIndex !== null ? "Edit Upstream API Key" : "Add Upstream API Key"}
+              {ampUpstreamKeyEditIndex !== null ? `${t("common.edit")} ${t("apiKeys.upstreamApiKey")}` : `${t("common.add")} ${t("apiKeys.upstreamApiKey")}`}
             </DialogTitle>
             <DialogDescription>
               Configure an upstream API key with associated local API keys.
@@ -2961,7 +2965,7 @@ export default function APIKeysPage() {
           </DialogHeader>
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="amp-upstream-key">Upstream API Key</Label>
+              <Label htmlFor="amp-upstream-key">{t("apiKeys.upstreamApiKey")}</Label>
               <Input
                 id="amp-upstream-key"
                 value={ampUpstreamKeyValue}
@@ -2970,7 +2974,7 @@ export default function APIKeysPage() {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="amp-upstream-api-keys">API Keys</Label>
+              <Label htmlFor="amp-upstream-api-keys">{t("apiKeys.title")}</Label>
               <Input
                 id="amp-upstream-api-keys"
                 value={ampUpstreamKeyApiKeys}
@@ -2985,10 +2989,10 @@ export default function APIKeysPage() {
               onClick={() => setAmpUpstreamKeyFormOpen(false)}
               disabled={ampUpstreamKeySaving}
             >
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button onClick={handleAmpUpstreamKeySave} disabled={ampUpstreamKeySaving}>
-              {ampUpstreamKeySaving ? "Saving..." : "Save"}
+              {ampUpstreamKeySaving ? t("common.saving") : t("common.save")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -3003,19 +3007,19 @@ export default function APIKeysPage() {
       >
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Delete Upstream API Key</AlertDialogTitle>
+            <AlertDialogTitle>{`${t("common.delete")} ${t("apiKeys.upstreamApiKey")}`}</AlertDialogTitle>
             <AlertDialogDescription>
-              Are you sure you want to delete this upstream API key? This action cannot be undone.
+              {`${t("apiKeys.deleteConfirm")} ${t("apiKeys.upstreamApiKey").toLowerCase()}? ${t("common.cannotUndo")}`}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel disabled={deleteAmpUpstreamKeySaving}>Cancel</AlertDialogCancel>
+            <AlertDialogCancel disabled={deleteAmpUpstreamKeySaving}>{t("common.cancel")}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteAmpUpstreamKey}
               disabled={deleteAmpUpstreamKeySaving}
               className={DELETE_ACTION_CLASS}
             >
-              {deleteAmpUpstreamKeySaving ? "Deleting..." : "Delete"}
+              {deleteAmpUpstreamKeySaving ? t("authFiles.deleting") : t("common.delete")}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>

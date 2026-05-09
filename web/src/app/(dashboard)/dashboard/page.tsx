@@ -12,6 +12,8 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Server, Key, Shield, BarChart3, Settings } from "lucide-react";
+import { t } from "@/lib/i18n";
+import { useLocale } from "@/lib/locale-context";
 
 function CardSkeleton() {
   return (
@@ -30,6 +32,7 @@ function CardSkeleton() {
 }
 
 export default function DashboardPage() {
+  useLocale();
   const [version, setVersion] = useState<LatestVersion | null>(null);
   const [authFiles, setAuthFiles] = useState<AuthFile[] | null>(null);
   const [debugMode, setDebugMode] = useState<boolean | null>(null);
@@ -93,7 +96,7 @@ export default function DashboardPage() {
   if (isLoading) {
     return (
       <div className="flex flex-col gap-4">
-        <h1 className="text-2xl font-semibold">Dashboard</h1>
+        <h1 className="text-2xl font-semibold">{t("dashboard.title")}</h1>
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           <CardSkeleton />
           <CardSkeleton />
@@ -107,32 +110,32 @@ export default function DashboardPage() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="text-2xl font-semibold">Dashboard</h1>
+      <h1 className="text-2xl font-semibold">{t("dashboard.title")}</h1>
 
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader>
             <div className="flex items-center gap-2">
               <Server className="size-5 text-muted-foreground" />
-              <CardTitle>Server Version</CardTitle>
+              <CardTitle>{t("dashboard.serverVersion")}</CardTitle>
             </div>
-            <CardDescription>Current server version and status</CardDescription>
+            <CardDescription>{t("dashboard.serverVersionDesc")}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
             {version ? (
               <>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">Version</span>
+                  <span className="text-sm text-muted-foreground">{t("dashboard.version")}</span>
                   <Badge variant="secondary">{version["latest-version"]}</Badge>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="text-sm text-muted-foreground">Config</span>
-                  <Badge variant="outline">Loaded</Badge>
+                  <span className="text-sm text-muted-foreground">{t("dashboard.config")}</span>
+                  <Badge variant="outline">{t("dashboard.loaded")}</Badge>
                 </div>
               </>
             ) : (
               <span className="text-sm text-muted-foreground">
-                Version info unavailable
+                {t("dashboard.versionUnavailable")}
               </span>
             )}
           </CardContent>
@@ -142,9 +145,9 @@ export default function DashboardPage() {
           <CardHeader>
             <div className="flex items-center gap-2">
               <Key className="size-5 text-muted-foreground" />
-              <CardTitle>Provider Overview</CardTitle>
+              <CardTitle>{t("dashboard.providerOverview")}</CardTitle>
             </div>
-            <CardDescription>Auth files grouped by provider</CardDescription>
+            <CardDescription>{t("dashboard.providerOverviewDesc")}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
             {providerCounts && Object.keys(providerCounts).length > 0 ? (
@@ -157,15 +160,15 @@ export default function DashboardPage() {
                   ))}
                 </div>
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <span>{activeAuthFiles} active</span>
+                  <span>{activeAuthFiles} {t("dashboard.active")}</span>
                   {disabledAuthFiles > 0 && (
-                    <span>({disabledAuthFiles} disabled)</span>
+                    <span>({disabledAuthFiles} {t("dashboard.disabled")})</span>
                   )}
                 </div>
               </>
             ) : (
               <span className="text-sm text-muted-foreground">
-                No auth files configured
+                {t("dashboard.noAuthFiles")}
               </span>
             )}
           </CardContent>
@@ -175,37 +178,37 @@ export default function DashboardPage() {
           <CardHeader>
             <div className="flex items-center gap-2">
               <Settings className="size-5 text-muted-foreground" />
-              <CardTitle>Config Summary</CardTitle>
+              <CardTitle>{t("dashboard.configSummary")}</CardTitle>
             </div>
-            <CardDescription>Key settings at a glance</CardDescription>
+            <CardDescription>{t("dashboard.configSummaryDesc")}</CardDescription>
           </CardHeader>
           <CardContent className="flex flex-col gap-3">
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Debug Mode</span>
+              <span className="text-sm text-muted-foreground">{t("dashboard.debugMode")}</span>
               <Badge variant={debugMode ? "default" : "outline"}>
-                {debugMode ? "Enabled" : "Disabled"}
+                {debugMode ? t("common.enabled") : t("common.disabled")}
               </Badge>
             </div>
             <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Proxy URL</span>
+              <span className="text-sm text-muted-foreground">{t("dashboard.proxyURL")}</span>
               <span className="text-sm truncate max-w-[160px]">
-                {proxyURL || "Not set"}
+                {proxyURL || t("dashboard.notSet")}
               </span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">
-                Routing Strategy
+                {t("dashboard.routingStrategy")}
               </span>
               <Badge variant="secondary">
-                {routingStrategy || "default"}
+                {routingStrategy || t("common.default")}
               </Badge>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-sm text-muted-foreground">
-                Request Retry
+                {t("dashboard.requestRetry")}
               </span>
               <span className="text-sm">
-                {requestRetry ?? "N/A"}
+                {requestRetry ?? t("common.na")}
               </span>
             </div>
           </CardContent>
@@ -215,9 +218,9 @@ export default function DashboardPage() {
           <CardHeader>
             <div className="flex items-center gap-2">
               <Shield className="size-5 text-muted-foreground" />
-              <CardTitle>API Keys</CardTitle>
+              <CardTitle>{t("dashboard.apiKeys")}</CardTitle>
             </div>
-            <CardDescription>Configured API key entries</CardDescription>
+            <CardDescription>{t("dashboard.apiKeysDesc")}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-2">
@@ -225,7 +228,7 @@ export default function DashboardPage() {
                 {apiKeysCount ?? 0}
               </span>
               <span className="text-sm text-muted-foreground">
-                keys configured
+                {t("dashboard.keysConfigured")}
               </span>
             </div>
           </CardContent>
@@ -235,14 +238,14 @@ export default function DashboardPage() {
           <CardHeader>
             <div className="flex items-center gap-2">
               <BarChart3 className="size-5 text-muted-foreground" />
-              <CardTitle>Usage Statistics</CardTitle>
+              <CardTitle>{t("dashboard.usageStatistics")}</CardTitle>
             </div>
-            <CardDescription>Usage tracking status</CardDescription>
+            <CardDescription>{t("dashboard.usageTracking")}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="flex items-center gap-2">
               <Badge variant={usageEnabled ? "default" : "outline"}>
-                {usageEnabled ? "Enabled" : "Disabled"}
+                {usageEnabled ? t("common.enabled") : t("common.disabled")}
               </Badge>
             </div>
           </CardContent>

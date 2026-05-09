@@ -2,6 +2,8 @@
 
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { api } from "@/lib/api";
+import { t } from "@/lib/i18n";
+import { useLocale } from "@/lib/locale-context";
 import {
   Card,
   CardContent,
@@ -99,6 +101,7 @@ function TableSkeleton() {
 }
 
 export default function UsagePage() {
+  useLocale();
   const [data, setData] = useState<UsageData | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [sortKey, setSortKey] = useState<SortKey>("request_count");
@@ -221,28 +224,28 @@ export default function UsagePage() {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Usage</h1>
+        <h1 className="text-2xl font-semibold">{t("usage.title")}</h1>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={fetchData}>
             <RefreshCw className="size-4" />
-            Refresh
+            {t("common.refresh")}
           </Button>
           <Button variant="outline" size="sm" onClick={handleExport}>
             <Download className="size-4" />
-            Export
+            {t("usage.export")}
           </Button>
           <Dialog open={importOpen} onOpenChange={setImportOpen}>
             <DialogTrigger asChild>
               <Button variant="outline" size="sm">
                 <Upload className="size-4" />
-                Import
+                {t("usage.import")}
               </Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle>Import Usage Data</DialogTitle>
+                <DialogTitle>{t("usage.importTitle")}</DialogTitle>
                 <DialogDescription>
-                  Select a JSON file to import usage statistics.
+                  {t("usage.importDesc")}
                 </DialogDescription>
               </DialogHeader>
               <Input
@@ -258,10 +261,10 @@ export default function UsagePage() {
                   onClick={() => setImportOpen(false)}
                   disabled={importing}
                 >
-                  Cancel
+                  {t("common.cancel")}
                 </Button>
                 <Button onClick={handleImport} disabled={!importFile || importing}>
-                  {importing ? "Importing..." : "Import"}
+                  {importing ? t("usage.importing") : t("usage.import")}
                 </Button>
               </DialogFooter>
             </DialogContent>
@@ -283,7 +286,7 @@ export default function UsagePage() {
               <CardHeader>
                 <div className="flex items-center gap-2">
                   <Activity className="size-5 text-muted-foreground" />
-                  <CardTitle>Total Requests</CardTitle>
+                  <CardTitle>{t("usage.totalRequests")}</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
@@ -297,7 +300,7 @@ export default function UsagePage() {
               <CardHeader>
                 <div className="flex items-center gap-2">
                   <ArrowDownToLine className="size-5 text-muted-foreground" />
-                  <CardTitle>Input Tokens</CardTitle>
+                  <CardTitle>{t("usage.inputTokens")}</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
@@ -311,7 +314,7 @@ export default function UsagePage() {
               <CardHeader>
                 <div className="flex items-center gap-2">
                   <ArrowUpFromLine className="size-5 text-muted-foreground" />
-                  <CardTitle>Output Tokens</CardTitle>
+                  <CardTitle>{t("usage.outputTokens")}</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
@@ -332,7 +335,7 @@ export default function UsagePage() {
                         : "text-muted-foreground",
                     )}
                   />
-                  <CardTitle>Failed Requests</CardTitle>
+                  <CardTitle>{t("usage.failedRequests")}</CardTitle>
                 </div>
               </CardHeader>
               <CardContent>
@@ -346,7 +349,7 @@ export default function UsagePage() {
                 </span>
                 {failedRequests > 0 && (
                   <Badge variant="destructive" className="ml-2">
-                    Errors
+                    {t("usage.errors")}
                   </Badge>
                 )}
               </CardContent>
@@ -366,7 +369,7 @@ export default function UsagePage() {
                     className="inline-flex items-center gap-1 hover:underline"
                     onClick={() => handleSort("model")}
                   >
-                    Model
+                    {t("usage.model")}
                     <SortIcon column="model" />
                   </button>
                 </TableHead>
@@ -376,7 +379,7 @@ export default function UsagePage() {
                     className="inline-flex items-center gap-1 hover:underline ml-auto"
                     onClick={() => handleSort("request_count")}
                   >
-                    Requests
+                    {t("usage.requests")}
                     <SortIcon column="request_count" />
                   </button>
                 </TableHead>
@@ -386,7 +389,7 @@ export default function UsagePage() {
                     className="inline-flex items-center gap-1 hover:underline ml-auto"
                     onClick={() => handleSort("input_tokens")}
                   >
-                    Input Tokens
+                    {t("usage.inputTokens")}
                     <SortIcon column="input_tokens" />
                   </button>
                 </TableHead>
@@ -396,7 +399,7 @@ export default function UsagePage() {
                     className="inline-flex items-center gap-1 hover:underline ml-auto"
                     onClick={() => handleSort("output_tokens")}
                   >
-                    Output Tokens
+                    {t("usage.outputTokens")}
                     <SortIcon column="output_tokens" />
                   </button>
                 </TableHead>
@@ -411,7 +414,7 @@ export default function UsagePage() {
                     colSpan={4}
                     className="h-24 text-center text-muted-foreground"
                   >
-                    No usage data available
+                    {t("usage.noData")}
                   </TableCell>
                 </TableRow>
               ) : (

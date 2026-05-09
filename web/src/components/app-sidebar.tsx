@@ -12,9 +12,10 @@ import {
   BarChart3,
   ScrollText,
   Server,
-  Boxes,
   Sun,
   Moon,
+  Languages,
+  Boxes,
 } from "lucide-react";
 
 import {
@@ -32,15 +33,18 @@ import {
   SidebarSeparator,
 } from "@/components/ui/sidebar";
 
+import { t, localeNames, type Locale } from "@/lib/i18n";
+import { useLocale } from "@/lib/locale-context";
+
 const navItems = [
-  { title: "Dashboard", href: "/dashboard", icon: LayoutDashboard },
-  { title: "Config", href: "/config", icon: Settings },
-  { title: "Auth Files", href: "/auth-files", icon: Key },
-  { title: "OAuth", href: "/oauth", icon: Shield },
-  { title: "Models", href: "/models", icon: Boxes },
-  { title: "API Keys", href: "/api-keys", icon: KeyRound },
-  { title: "Usage", href: "/usage", icon: BarChart3 },
-  { title: "Logs", href: "/logs", icon: ScrollText },
+  { titleKey: "nav.dashboard", href: "/dashboard", icon: LayoutDashboard },
+  { titleKey: "nav.config", href: "/config", icon: Settings },
+  { titleKey: "nav.authFiles", href: "/auth-files", icon: Key },
+  { titleKey: "nav.oauth", href: "/oauth", icon: Shield },
+  { titleKey: "nav.models", href: "/models", icon: Boxes },
+  { titleKey: "nav.apiKeys", href: "/api-keys", icon: KeyRound },
+  { titleKey: "nav.usage", href: "/usage", icon: BarChart3 },
+  { titleKey: "nav.logs", href: "/logs", icon: ScrollText },
 ];
 
 function ThemeToggle() {
@@ -48,18 +52,38 @@ function ThemeToggle() {
 
   return (
     <SidebarMenuButton
-      tooltip="Toggle theme"
+      tooltip={t("theme.toggle")}
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
     >
       <Sun className="hidden dark:block" />
       <Moon className="block dark:hidden" />
-      <span>{theme === "dark" ? "Light Mode" : "Dark Mode"}</span>
+      <span>{theme === "dark" ? t("theme.light") : t("theme.dark")}</span>
+    </SidebarMenuButton>
+  );
+}
+
+const LOCALE_KEYS: Locale[] = ["en", "zh-CN", "zh-TW"];
+
+function LocaleToggle() {
+  const { locale, setLocale } = useLocale();
+
+  const nextIndex = (LOCALE_KEYS.indexOf(locale) + 1) % LOCALE_KEYS.length;
+  const nextLocale = LOCALE_KEYS[nextIndex];
+
+  return (
+    <SidebarMenuButton
+      tooltip={t("locale.switch")}
+      onClick={() => setLocale(nextLocale)}
+    >
+      <Languages />
+      <span>{localeNames[locale]}</span>
     </SidebarMenuButton>
   );
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const pathname = usePathname();
+  useLocale();
 
   return (
     <Sidebar collapsible="icon" {...props}>
@@ -72,9 +96,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <Server className="size-4" />
                 </div>
                 <div className="flex flex-col gap-0.5 leading-none">
-                  <span className="font-heading font-semibold">CLI Proxy API</span>
+                  <span className="font-heading font-semibold">{t("app.title")}</span>
                   <span className="text-xs text-muted-foreground">
-                    Management
+                    {t("app.subtitle")}
                   </span>
                 </div>
               </Link>
@@ -85,7 +109,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarSeparator />
       <SidebarContent>
         <SidebarGroup>
-          <SidebarGroupLabel>Navigation</SidebarGroupLabel>
+          <SidebarGroupLabel>{t("nav.navigation")}</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {navItems.map((item) => (
@@ -93,11 +117,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                   <SidebarMenuButton
                     asChild
                     isActive={pathname === item.href}
-                    tooltip={item.title}
+                    tooltip={t(item.titleKey)}
                   >
                     <Link href={item.href}>
                       <item.icon />
-                      <span>{item.title}</span>
+                      <span>{t(item.titleKey)}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -108,6 +132,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarContent>
       <SidebarFooter>
         <SidebarMenu>
+          <SidebarMenuItem>
+            <LocaleToggle />
+          </SidebarMenuItem>
           <SidebarMenuItem>
             <ThemeToggle />
           </SidebarMenuItem>

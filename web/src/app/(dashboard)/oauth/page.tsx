@@ -32,6 +32,8 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { t } from "@/lib/i18n";
+import { useLocale } from "@/lib/locale-context";
 
 interface AuthFlowResult {
   url?: string;
@@ -98,22 +100,23 @@ function authStatusBadge(hasAuth: boolean) {
   return hasAuth ? (
     <Badge variant="default" className="gap-1">
       <ShieldCheck className="size-3" />
-      Authenticated
+      {t("oauth.authenticated")}
     </Badge>
   ) : (
     <Badge variant="outline" className="gap-1 text-muted-foreground">
       <ShieldOff className="size-3" />
-      Not Authenticated
+      {t("oauth.notAuthenticated")}
     </Badge>
   );
 }
 
 export default function OAuthPage() {
+  useLocale();
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center gap-2">
         <KeyRound className="size-5 text-muted-foreground" />
-        <h1 className="text-lg font-semibold">OAuth</h1>
+        <h1 className="text-lg font-semibold">{t("oauth.title")}</h1>
       </div>
 
       <ProvidersTab />
@@ -122,6 +125,7 @@ export default function OAuthPage() {
 }
 
 function ProvidersTab() {
+  useLocale();
   const [providers, setProviders] = useState<OAuthProvider[]>([]);
   const [authFiles, setAuthFiles] = useState<AuthFile[]>([]);
   const [loading, setLoading] = useState(true);
@@ -391,7 +395,7 @@ function ProvidersTab() {
       <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-12 text-center">
         <KeyRound className="size-10 text-muted-foreground/50" />
         <p className="text-sm text-muted-foreground">
-          No OAuth providers available.
+          {t("oauth.noProviders")}
         </p>
       </div>
     );
@@ -409,7 +413,7 @@ function ProvidersTab() {
                   <CardTitle className="text-base">{provider.display_name}</CardTitle>
                   <div className="flex items-center gap-1.5">
                     {!provider.configured && (
-                      <Badge variant="outline" className="text-xs">Not Configured</Badge>
+                      <Badge variant="outline" className="text-xs">{t("oauth.notConfigured")}</Badge>
                     )}
                     {flowTypeBadge(provider.flow_type)}
                   </div>
@@ -429,10 +433,10 @@ function ProvidersTab() {
                   >
                     <ExternalLink />
                     {provider.flow_type === "token" && !PROVIDER_AUTH_FN[provider.key]
-                      ? "CLI Setup"
+                      ? t("oauth.cliSetup")
                       : hasAuth
-                        ? "Add Account"
-                        : "Login"}
+                        ? t("oauth.addAccount")
+                        : t("oauth.login")}
                   </Button>
                 </div>
               </CardContent>
@@ -444,11 +448,11 @@ function ProvidersTab() {
       <Dialog open={authDialogOpen} onOpenChange={handleDialogClose}>
         <DialogContent className="sm:max-w-md" onInteractOutside={(e) => e.preventDefault()}>
           <DialogHeader>
-            <DialogTitle>Authenticating {authDialogDisplayName}</DialogTitle>
+            <DialogTitle>{`${t("oauth.authenticating")} ${authDialogDisplayName}`}</DialogTitle>
             <DialogDescription>
               {authDialogIsDeviceCode
-                ? "Visit the verification URL and enter the code below."
-                : "Waiting for authentication to complete..."}
+                ? t("oauth.visitUrl")
+                : t("oauth.waiting")}
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col items-center gap-4 py-4">
@@ -456,7 +460,7 @@ function ProvidersTab() {
             {authDialogIsDeviceCode ? (
               <div className="flex flex-col items-center gap-3">
                 <div className="flex flex-col gap-1 text-center">
-                  <span className="text-sm text-muted-foreground">Verification URL</span>
+                  <span className="text-sm text-muted-foreground">{t("oauth.verificationUrl")}</span>
                   <a
                     href={authDialogVerificationUri}
                     target="_blank"
@@ -467,7 +471,7 @@ function ProvidersTab() {
                   </a>
                 </div>
                 <div className="flex flex-col gap-1 text-center">
-                  <span className="text-sm text-muted-foreground">Code</span>
+                  <span className="text-sm text-muted-foreground">{t("oauth.code")}</span>
                   <div className="flex items-center gap-2">
                     <code className="rounded-md bg-muted px-3 py-1.5 text-lg font-mono font-semibold tracking-wider">
                       {authDialogUserCode}
@@ -484,13 +488,13 @@ function ProvidersTab() {
               </div>
             ) : (
               <p className="text-sm text-muted-foreground">
-                A browser tab has been opened. Complete the login there.
+                {t("oauth.browserOpened")}
               </p>
             )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => handleDialogClose(false)}>
-              Cancel
+              {t("common.cancel")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -499,9 +503,9 @@ function ProvidersTab() {
       <Dialog open={paramDialogOpen} onOpenChange={setParamDialogOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Login to {paramDialogProvider?.display_name}</DialogTitle>
+            <DialogTitle>{t("oauth.loginTo").replace("{provider}", paramDialogProvider?.display_name ?? "")}</DialogTitle>
             <DialogDescription>
-              This provider requires additional credentials to authenticate.
+              {t("oauth.requiresCredentials")}
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-4">
@@ -525,10 +529,10 @@ function ProvidersTab() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setParamDialogOpen(false)}>
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button onClick={handleParamSubmit}>
-              Continue
+              {t("oauth.continue")}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -3,6 +3,8 @@
 import { useCallback, useEffect, useState } from "react";
 import { api } from "@/lib/api";
 import { toast } from "sonner";
+import { t } from "@/lib/i18n";
+import { useLocale } from "@/lib/locale-context";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -202,7 +204,7 @@ function NumberSetting({
           disabled={isSaving || inputValue === String(currentValue)}
         >
           {isSaving ? <Spinner className="size-3" /> : <Save className="size-3" />}
-          Save
+          {t("common.save")}
         </Button>
       </div>
     </div>
@@ -224,7 +226,7 @@ function ProxyURLSetting() {
         setInputValue(data);
       })
       .catch((err) => {
-        toast.error("Failed to load Proxy URL", {
+        toast.error(`Failed to load ${t("config.proxyURL")}`, {
           description: err instanceof Error ? err.message : "Unknown error",
         });
       })
@@ -236,9 +238,9 @@ function ProxyURLSetting() {
     try {
       await api.string.putProxyURL(inputValue);
       setCurrentValue(inputValue);
-      toast.success("Proxy URL updated");
+      toast.success(t("config.proxyUrlUpdated"));
     } catch (err) {
-      toast.error("Failed to update Proxy URL", {
+      toast.error(`Failed to update ${t("config.proxyURL")}`, {
         description: err instanceof Error ? err.message : "Unknown error",
       });
     } finally {
@@ -252,9 +254,9 @@ function ProxyURLSetting() {
       await api.string.deleteProxyURL();
       setCurrentValue("");
       setInputValue("");
-      toast.success("Proxy URL cleared");
+      toast.success(t("config.proxyUrlCleared"));
     } catch (err) {
-      toast.error("Failed to clear Proxy URL", {
+      toast.error(`Failed to clear ${t("config.proxyURL")}`, {
         description: err instanceof Error ? err.message : "Unknown error",
       });
     } finally {
@@ -267,7 +269,7 @@ function ProxyURLSetting() {
       <div className="flex items-center justify-between gap-4 py-2">
         <div className="flex items-center gap-2">
           <Globe className="size-4 text-muted-foreground" />
-          <span className="text-sm">Proxy URL</span>
+          <span className="text-sm">{t("config.proxyURL")}</span>
         </div>
         <Skeleton className="h-8 w-64" />
       </div>
@@ -278,7 +280,7 @@ function ProxyURLSetting() {
     <div className="flex items-center justify-between gap-4 py-2">
       <div className="flex items-center gap-2">
         <Globe className="size-4 text-muted-foreground" />
-        <span className="text-sm">Proxy URL</span>
+        <span className="text-sm">{t("config.proxyURL")}</span>
       </div>
       <div className="flex items-center gap-2">
         <Input
@@ -298,7 +300,7 @@ function ProxyURLSetting() {
           disabled={isSaving || inputValue === currentValue}
         >
           {isSaving ? <Spinner className="size-3" /> : <Save className="size-3" />}
-          Save
+          {t("common.save")}
         </Button>
         <Button
           variant="outline"
@@ -307,7 +309,7 @@ function ProxyURLSetting() {
           disabled={isClearing || !currentValue}
         >
           {isClearing ? <Spinner className="size-3" /> : <Trash2 className="size-3" />}
-          Clear
+          {t("common.clear")}
         </Button>
       </div>
     </div>
@@ -324,7 +326,7 @@ function RoutingStrategySetting() {
       .getRoutingStrategy()
       .then((data) => setCurrentValue(data))
       .catch((err) => {
-        toast.error("Failed to load Routing Strategy", {
+        toast.error(`Failed to load ${t("config.routingStrategy")}`, {
           description: err instanceof Error ? err.message : "Unknown error",
         });
       })
@@ -338,7 +340,7 @@ function RoutingStrategySetting() {
       setCurrentValue(value);
       toast.success(`Routing strategy set to ${value}`);
     } catch (err) {
-      toast.error("Failed to update Routing Strategy", {
+      toast.error(`Failed to update ${t("config.routingStrategy")}`, {
         description: err instanceof Error ? err.message : "Unknown error",
       });
     } finally {
@@ -351,7 +353,7 @@ function RoutingStrategySetting() {
       <div className="flex items-center justify-between gap-4 py-2">
         <div className="flex items-center gap-2">
           <Route className="size-4 text-muted-foreground" />
-          <span className="text-sm">Routing Strategy</span>
+          <span className="text-sm">{t("config.routingStrategy")}</span>
         </div>
         <Skeleton className="h-8 w-40" />
       </div>
@@ -362,13 +364,13 @@ function RoutingStrategySetting() {
     <div className="flex items-center justify-between gap-4 py-2">
       <div className="flex items-center gap-2">
         <Route className="size-4 text-muted-foreground" />
-        <span className="text-sm">Routing Strategy</span>
+        <span className="text-sm">{t("config.routingStrategy")}</span>
       </div>
       <div className="flex items-center gap-2">
         {isSaving && <Spinner className="size-3" />}
         <Select value={currentValue ?? ""} onValueChange={handleChange} disabled={isSaving}>
           <SelectTrigger className="w-40">
-            <SelectValue placeholder="Select strategy" />
+            <SelectValue placeholder={t("config.selectStrategy")} />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="round-robin">round-robin</SelectItem>
@@ -401,9 +403,9 @@ function YAMLEditorTab() {
     setIsSaving(true);
     try {
       await api.config.putConfigYAML(yaml);
-      toast.success("Config saved successfully");
+      toast.success(t("config.saved"));
     } catch (err) {
-      toast.error("Failed to save config", {
+      toast.error(t("config.saveFailed"), {
         description: err instanceof Error ? err.message : "Unknown error",
       });
     } finally {
@@ -430,7 +432,7 @@ function YAMLEditorTab() {
       <div className="flex justify-end">
         <Button onClick={handleSave} disabled={isSaving}>
           {isSaving ? <Spinner className="size-4" /> : <Save />}
-          Save
+          {t("common.save")}
         </Button>
       </div>
     </div>
@@ -444,42 +446,42 @@ function SettingsFormTab() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Settings className="size-4" />
-            General Settings
+            {t("config.general")}
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-1">
           <BooleanSetting
-            label="Debug Mode"
+            label={t("config.debugMode")}
             icon={Bug}
             getter={api.boolean.getDebug}
             setter={api.boolean.putDebug}
           />
           <BooleanSetting
-            label="Logging to File"
+            label={t("config.loggingToFile")}
             icon={FileText}
             getter={api.boolean.getLoggingToFile}
             setter={api.boolean.putLoggingToFile}
           />
           <BooleanSetting
-            label="Usage Statistics"
+            label={t("config.usageStatistics")}
             icon={BarChart3}
             getter={api.boolean.getUsageStatisticsEnabled}
             setter={api.boolean.putUsageStatisticsEnabled}
           />
           <BooleanSetting
-            label="Request Logging"
+            label={t("config.requestLogging")}
             icon={LogOut}
             getter={api.boolean.getRequestLogEnabled}
             setter={api.boolean.putRequestLog}
           />
           <BooleanSetting
-            label="WebSocket Auth"
+            label={t("config.websocketAuth")}
             icon={Shield}
             getter={api.boolean.getWsAuth}
             setter={api.boolean.putWsAuth}
           />
           <BooleanSetting
-            label="Force Model Prefix"
+            label={t("config.forceModelPrefix")}
             icon={Hash}
             getter={api.boolean.getForceModelPrefix}
             setter={api.boolean.putForceModelPrefix}
@@ -491,20 +493,20 @@ function SettingsFormTab() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Globe className="size-4" />
-            Network Settings
+            {t("config.network")}
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-1">
           <ProxyURLSetting />
           <NumberSetting
-            label="Request Retry Count"
+            label={t("config.requestRetryCount")}
             icon={Hash}
             getter={api.integer.getRequestRetry}
             setter={api.integer.putRequestRetry}
             placeholder="0"
           />
           <NumberSetting
-            label="Max Retry Interval"
+            label={t("config.maxRetryInterval")}
             icon={Hash}
             getter={api.integer.getMaxRetryInterval}
             setter={api.integer.putMaxRetryInterval}
@@ -518,19 +520,19 @@ function SettingsFormTab() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <FolderOpen className="size-4" />
-            Log Settings
+            {t("config.logSettings")}
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-1">
           <NumberSetting
-            label="Logs Max Total Size MB"
+            label={t("config.logsMaxTotalSize")}
             icon={FileText}
             getter={api.integer.getLogsMaxTotalSizeMB}
             setter={api.integer.putLogsMaxTotalSizeMB}
             placeholder="0"
           />
           <NumberSetting
-            label="Error Logs Max Files"
+            label={t("config.errorLogsMaxFiles")}
             icon={FileText}
             getter={api.integer.getErrorLogsMaxFiles}
             setter={api.integer.putErrorLogsMaxFiles}
@@ -543,21 +545,23 @@ function SettingsFormTab() {
 }
 
 export default function ConfigPage() {
+  useLocale();
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center gap-2">
         <Settings className="size-5" />
-        <h1 className="text-xl font-semibold">Config</h1>
+        <h1 className="text-xl font-semibold">{t("config.title")}</h1>
       </div>
       <Tabs defaultValue="yaml">
         <TabsList>
           <TabsTrigger value="yaml">
             <FileText className="size-4" />
-            YAML Editor
+            {t("config.yamlEditor")}
           </TabsTrigger>
           <TabsTrigger value="settings">
             <Settings className="size-4" />
-            Settings
+            {t("config.settings")}
           </TabsTrigger>
         </TabsList>
         <TabsContent value="yaml">

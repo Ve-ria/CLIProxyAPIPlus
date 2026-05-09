@@ -12,6 +12,8 @@ import {
 import { toast } from "sonner";
 
 import { api, type ModelAlias } from "@/lib/api";
+import { t } from "@/lib/i18n";
+import { useLocale } from "@/lib/locale-context";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
@@ -49,6 +51,7 @@ const PROVIDER_OPTIONS = [
 ];
 
 function AliasesTab() {
+  useLocale();
   const [aliases, setAliases] = useState<Record<string, ModelAlias[]>>({});
   const [loading, setLoading] = useState(true);
   const fetchIdRef = useRef(0);
@@ -181,9 +184,9 @@ function AliasesTab() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Provider</TableHead>
-              <TableHead>Model</TableHead>
-              <TableHead>Alias</TableHead>
+              <TableHead>{t("authFiles.provider")}</TableHead>
+              <TableHead>{t("usage.model")}</TableHead>
+              <TableHead>{t("models.alias")}</TableHead>
               <TableHead className="w-20" />
             </TableRow>
           </TableHeader>
@@ -206,11 +209,11 @@ function AliasesTab() {
     <>
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          Model aliases map model names to alternative names for routing.
+          {t("models.aliasDesc")}
         </p>
         <Button size="sm" onClick={openAdd}>
           <Plus />
-          Add Alias
+          {t("models.addAlias")}
         </Button>
       </div>
 
@@ -218,7 +221,7 @@ function AliasesTab() {
         <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-12 text-center">
           <KeyRound className="size-10 text-muted-foreground/50" />
           <p className="text-sm text-muted-foreground">
-            No model aliases configured.
+            {t("models.noAliases")}
           </p>
         </div>
       ) : (
@@ -235,8 +238,8 @@ function AliasesTab() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Model</TableHead>
-                        <TableHead>Alias</TableHead>
+                        <TableHead>{t("usage.model")}</TableHead>
+                        <TableHead>{t("models.alias")}</TableHead>
                         <TableHead className="w-20" />
                       </TableRow>
                     </TableHeader>
@@ -278,17 +281,17 @@ function AliasesTab() {
       <Dialog open={addOpen} onOpenChange={setAddOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Add Model Alias</DialogTitle>
+            <DialogTitle>{t("models.addAliasTitle")}</DialogTitle>
             <DialogDescription>
-              Create a new model alias mapping.
+              {t("models.addAliasDesc")}
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="add-provider">Provider</Label>
+              <Label htmlFor="add-provider">{t("authFiles.provider")}</Label>
               <Select value={formProvider} onValueChange={setFormProvider}>
                 <SelectTrigger id="add-provider" className="w-full">
-                  <SelectValue placeholder="Select provider" />
+                  <SelectValue placeholder={t("models.selectProvider")} />
                 </SelectTrigger>
                 <SelectContent>
                   {PROVIDER_OPTIONS.map((p) => (
@@ -298,7 +301,7 @@ function AliasesTab() {
               </Select>
             </div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="add-model">Model</Label>
+              <Label htmlFor="add-model">{t("usage.model")}</Label>
               <Input
                 id="add-model"
                 value={formName}
@@ -307,7 +310,7 @@ function AliasesTab() {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="add-alias">Alias</Label>
+              <Label htmlFor="add-alias">{t("models.alias")}</Label>
               <Input
                 id="add-alias"
                 value={formAlias}
@@ -318,10 +321,10 @@ function AliasesTab() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setAddOpen(false)} disabled={saving}>
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button onClick={handleAdd} disabled={saving || !formProvider || !formName.trim() || !formAlias.trim()}>
-              {saving ? "Saving..." : "Add"}
+              {saving ? t("common.saving") : t("common.add")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -330,7 +333,7 @@ function AliasesTab() {
       <Dialog open={editTarget !== null} onOpenChange={(open) => { if (!open) setEditTarget(null); }}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Edit Model Alias</DialogTitle>
+            <DialogTitle>{t("models.editAlias")}</DialogTitle>
             <DialogDescription>
               Modify the alias mapping for{" "}
               <Badge variant="outline" className="mx-1">{editTarget?.provider}</Badge>
@@ -339,7 +342,7 @@ function AliasesTab() {
           </DialogHeader>
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="edit-model">Model</Label>
+              <Label htmlFor="edit-model">{t("usage.model")}</Label>
               <Input
                 id="edit-model"
                 value={formName}
@@ -347,7 +350,7 @@ function AliasesTab() {
               />
             </div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="edit-alias">Alias</Label>
+              <Label htmlFor="edit-alias">{t("models.alias")}</Label>
               <Input
                 id="edit-alias"
                 value={formAlias}
@@ -357,10 +360,10 @@ function AliasesTab() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setEditTarget(null)} disabled={saving}>
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button onClick={handleEdit} disabled={saving || !formName.trim() || !formAlias.trim()}>
-              {saving ? "Saving..." : "Save"}
+              {saving ? t("common.saving") : t("common.save")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -369,25 +372,25 @@ function AliasesTab() {
       <Dialog open={deleteTarget !== null} onOpenChange={(open) => { if (!open) setDeleteTarget(null); }}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Delete Model Alias</DialogTitle>
+            <DialogTitle>{t("models.deleteAlias")}</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete the alias{" "}
+              {t("models.deleteConfirm")}{" "}
               <Badge variant="outline" className="mx-1">{deleteTarget?.provider}</Badge>
               <span className="font-mono font-medium text-foreground">{deleteTarget?.alias.name}</span>{" "}
               → <span className="font-mono font-medium text-foreground">{deleteTarget?.alias.alias}</span>?
-              This action cannot be undone.
+              {" "}{t("common.cannotUndo")}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteTarget(null)} disabled={deleting}>
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button
               variant="destructive"
               onClick={handleDelete}
               disabled={deleting}
             >
-              {deleting ? "Deleting..." : "Delete"}
+              {deleting ? t("authFiles.deleting") : t("common.delete")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -397,6 +400,7 @@ function AliasesTab() {
 }
 
 function ExcludedModelsTab() {
+  useLocale();
   const [excludedModels, setExcludedModels] = useState<Record<string, string[]>>({});
   const [loading, setLoading] = useState(true);
   const fetchIdRef = useRef(0);
@@ -488,8 +492,8 @@ function ExcludedModelsTab() {
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Provider</TableHead>
-              <TableHead>Model Pattern</TableHead>
+              <TableHead>{t("authFiles.provider")}</TableHead>
+              <TableHead>{t("models.modelPattern")}</TableHead>
               <TableHead className="w-20" />
             </TableRow>
           </TableHeader>
@@ -511,11 +515,11 @@ function ExcludedModelsTab() {
     <>
       <div className="flex items-center justify-between">
         <p className="text-sm text-muted-foreground">
-          Manage models excluded from provider routing.
+          {t("models.excludedDesc")}
         </p>
         <Button size="sm" onClick={() => setAddOpen(true)}>
           <Plus />
-          Add Excluded Model
+          {t("models.addExcluded")}
         </Button>
       </div>
 
@@ -523,7 +527,7 @@ function ExcludedModelsTab() {
         <div className="flex flex-col items-center justify-center gap-2 rounded-lg border border-dashed p-12 text-center">
           <ShieldOff className="size-10 text-muted-foreground/50" />
           <p className="text-sm text-muted-foreground">
-            No excluded models configured.
+            {t("models.noExcluded")}
           </p>
         </div>
       ) : (
@@ -540,7 +544,7 @@ function ExcludedModelsTab() {
                   <Table>
                     <TableHeader>
                       <TableRow>
-                        <TableHead>Model Pattern</TableHead>
+                        <TableHead>{t("models.modelPattern")}</TableHead>
                         <TableHead className="w-20" />
                       </TableRow>
                     </TableHeader>
@@ -570,17 +574,17 @@ function ExcludedModelsTab() {
       <Dialog open={addOpen} onOpenChange={setAddOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Add Excluded Model</DialogTitle>
+            <DialogTitle>{t("models.addExcluded")}</DialogTitle>
             <DialogDescription>
-              Exclude a model pattern from a specific provider.
+              {t("models.addExcludedDesc")}
             </DialogDescription>
           </DialogHeader>
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
-              <Label htmlFor="add-excluded-provider">Provider</Label>
+              <Label htmlFor="add-excluded-provider">{t("authFiles.provider")}</Label>
               <Select value={formProvider} onValueChange={setFormProvider}>
                 <SelectTrigger id="add-excluded-provider" className="w-full">
-                  <SelectValue placeholder="Select provider" />
+                  <SelectValue placeholder={t("models.selectProvider")} />
                 </SelectTrigger>
                 <SelectContent>
                   {PROVIDER_OPTIONS.map((p) => (
@@ -592,7 +596,7 @@ function ExcludedModelsTab() {
               </Select>
             </div>
             <div className="flex flex-col gap-2">
-              <Label htmlFor="add-excluded-model">Model Pattern</Label>
+              <Label htmlFor="add-excluded-model">{t("models.modelPattern")}</Label>
               <Input
                 id="add-excluded-model"
                 value={formModel}
@@ -603,10 +607,10 @@ function ExcludedModelsTab() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setAddOpen(false)} disabled={saving}>
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button onClick={handleAdd} disabled={saving || !formProvider || !formModel.trim()}>
-              {saving ? "Saving..." : "Add"}
+              {saving ? t("common.saving") : t("common.add")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -615,24 +619,24 @@ function ExcludedModelsTab() {
       <Dialog open={deleteTarget !== null} onOpenChange={(open) => { if (!open) setDeleteTarget(null); }}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Remove Excluded Model</DialogTitle>
+            <DialogTitle>{t("models.removeExcluded")}</DialogTitle>
             <DialogDescription>
-              Are you sure you want to remove{" "}
+              {t("models.removeExcludedConfirm")}{" "}
               <Badge variant="outline" className="mx-1">{deleteTarget?.provider}</Badge>
               <span className="font-mono font-medium text-foreground">{deleteTarget?.model}</span>{" "}
-              from the excluded list? This action cannot be undone.
+              {t("models.fromExcludedList")} {t("common.cannotUndo")}
             </DialogDescription>
           </DialogHeader>
           <DialogFooter>
             <Button variant="outline" onClick={() => setDeleteTarget(null)} disabled={deleting}>
-              Cancel
+              {t("common.cancel")}
             </Button>
             <Button
               variant="destructive"
               onClick={handleDelete}
               disabled={deleting}
             >
-              {deleting ? "Deleting..." : "Delete"}
+              {deleting ? t("authFiles.deleting") : t("common.delete")}
             </Button>
           </DialogFooter>
         </DialogContent>
@@ -642,17 +646,18 @@ function ExcludedModelsTab() {
 }
 
 export default function ModelsPage() {
+  useLocale();
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center gap-2">
         <Boxes className="size-5 text-muted-foreground" />
-        <h1 className="text-lg font-semibold">Models</h1>
+        <h1 className="text-lg font-semibold">{t("models.title")}</h1>
       </div>
 
       <Tabs defaultValue="aliases">
         <TabsList>
-          <TabsTrigger value="aliases">Model Aliases</TabsTrigger>
-          <TabsTrigger value="excluded">Excluded Models</TabsTrigger>
+          <TabsTrigger value="aliases">{t("models.aliases")}</TabsTrigger>
+          <TabsTrigger value="excluded">{t("models.excluded")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="aliases">

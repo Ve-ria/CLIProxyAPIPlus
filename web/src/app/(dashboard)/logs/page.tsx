@@ -4,6 +4,8 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { api, type ApplicationLogs, type ErrorLogFile } from "@/lib/api";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { t } from "@/lib/i18n";
+import { useLocale } from "@/lib/locale-context";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -86,6 +88,7 @@ function formatDate(dateStr: string): string {
 }
 
 function ApplicationLogsTab() {
+  useLocale();
   const [logs, setLogs] = useState<string[]>([]);
   const [lineCount, setLineCount] = useState(0);
   const [latestTimestamp, setLatestTimestamp] = useState<number | null>(null);
@@ -177,27 +180,26 @@ function ApplicationLogsTab() {
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <Badge variant="secondary">{lineCount} lines</Badge>
+          <Badge variant="secondary">{t("logs.lines").replace("{count}", String(lineCount))}</Badge>
         </div>
         <AlertDialog>
           <AlertDialogTrigger asChild>
             <Button variant="destructive" size="sm" disabled={isClearing}>
               <Trash2 />
-              Clear Logs
+              {t("logs.clearLogs")}
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Clear all logs?</AlertDialogTitle>
+              <AlertDialogTitle>{t("logs.clearConfirm")}</AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. All application logs will be
-                permanently deleted.
+                {t("logs.clearWarning")}
               </AlertDialogDescription>
             </AlertDialogHeader>
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
               <AlertDialogAction className="bg-destructive/10 text-destructive hover:bg-destructive/20" onClick={handleClearLogs}>
-                Clear Logs
+                {t("logs.clearLogs")}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -211,7 +213,7 @@ function ApplicationLogsTab() {
         <div className="p-2 font-mono text-xs leading-5">
           {logs.length === 0 ? (
             <div className="flex items-center justify-center py-12 text-muted-foreground">
-              No logs available
+              {t("logs.noLogs")}
             </div>
           ) : (
             logs.map((line, i) => {
@@ -236,6 +238,7 @@ function ApplicationLogsTab() {
 }
 
 function ErrorLogsTab() {
+  useLocale();
   const [files, setFiles] = useState<ErrorLogFile[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [downloading, setDownloading] = useState<string | null>(null);
@@ -291,25 +294,25 @@ function ErrorLogsTab() {
   return (
     <div className="flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <Badge variant="secondary">{files.length} files</Badge>
+        <Badge variant="secondary">{t("logs.files").replace("{count}", String(files.length))}</Badge>
         <Button variant="outline" size="sm" onClick={fetchErrorLogs}>
           <RefreshCw />
-          Refresh
+          {t("common.refresh")}
         </Button>
       </div>
       {files.length === 0 ? (
         <div className="flex items-center justify-center rounded-md border py-12 text-muted-foreground">
-          No error log files found
+          {t("logs.noErrorLogs")}
         </div>
       ) : (
         <div className="rounded-md border">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>File Name</TableHead>
-                <TableHead>Size</TableHead>
-                <TableHead>Modified</TableHead>
-                <TableHead className="text-right">Actions</TableHead>
+                <TableHead>{t("logs.fileName")}</TableHead>
+                <TableHead>{t("logs.size")}</TableHead>
+                <TableHead>{t("logs.modified")}</TableHead>
+                <TableHead className="text-right">{t("logs.actions")}</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -331,7 +334,7 @@ function ErrorLogsTab() {
                       disabled={downloading === file.name}
                     >
                       <Download />
-                      {downloading === file.name ? "Downloading..." : "Download"}
+                      {downloading === file.name ? t("logs.downloading") : t("common.download")}
                     </Button>
                   </TableCell>
                 </TableRow>
@@ -345,6 +348,7 @@ function ErrorLogsTab() {
 }
 
 function RequestLogsTab() {
+  useLocale();
   const [enabled, setEnabled] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isToggling, setIsToggling] = useState(false);
@@ -410,7 +414,7 @@ function RequestLogsTab() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Bug className="size-4" />
-            Request Logging
+            {t("logs.requestLogging")}
           </CardTitle>
         </CardHeader>
         <CardContent className="flex flex-col gap-4">
@@ -421,7 +425,7 @@ function RequestLogsTab() {
               disabled={isToggling}
             />
             <span className="text-sm">
-              {enabled ? "Enabled" : "Disabled"}
+              {enabled ? t("common.enabled") : t("common.disabled")}
             </span>
           </div>
           {enabled && (
@@ -429,21 +433,20 @@ function RequestLogsTab() {
               <Separator />
               <div className="flex flex-col gap-2 text-sm text-muted-foreground">
                 <p>
-                  Request logging is active. Individual request logs can be
-                  downloaded by their request ID.
+                  {t("logs.requestLoggingDesc")}
                 </p>
               </div>
               <Separator />
               <div className="flex flex-col gap-2">
                 <label className="text-sm font-medium">
-                  Fetch Request Log by ID
+                  {t("logs.fetchById")}
                 </label>
                 <div className="flex items-center gap-2">
                   <input
                     type="text"
                     value={requestId}
                     onChange={(e) => setRequestId(e.target.value)}
-                    placeholder="Enter request ID"
+                    placeholder={t("logs.enterId")}
                     className="flex h-8 w-full rounded-md border border-input bg-background px-3 py-1 text-sm shadow-sm transition-colors placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                     onKeyDown={(e) => {
                       if (e.key === "Enter") handleFetchRequestLog();
@@ -460,7 +463,7 @@ function RequestLogsTab() {
                     ) : (
                       <Info />
                     )}
-                    Fetch
+                    {t("logs.fetch")}
                   </Button>
                 </div>
                 {requestLog && (
@@ -480,25 +483,26 @@ function RequestLogsTab() {
 }
 
 export default function LogsPage() {
+  useLocale();
   return (
     <div className="flex flex-col gap-6">
       <div className="flex items-center gap-2">
         <Terminal className="size-5" />
-        <h1 className="text-xl font-semibold">Logs</h1>
+        <h1 className="text-xl font-semibold">{t("logs.title")}</h1>
       </div>
       <Tabs defaultValue="application">
         <TabsList>
           <TabsTrigger value="application">
             <FileText className="size-4" />
-            Application
+            {t("logs.application")}
           </TabsTrigger>
           <TabsTrigger value="errors">
             <AlertTriangle className="size-4" />
-            Error Logs
+            {t("logs.errorLogs")}
           </TabsTrigger>
           <TabsTrigger value="requests">
             <Bug className="size-4" />
-            Request Logs
+            {t("logs.requestLogs")}
           </TabsTrigger>
         </TabsList>
         <TabsContent value="application">

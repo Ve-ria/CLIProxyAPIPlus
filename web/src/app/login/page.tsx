@@ -3,6 +3,8 @@
 import { useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/lib/auth-context";
+import { t } from "@/lib/i18n";
+import { useLocale } from "@/lib/locale-context";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -21,6 +23,7 @@ export default function LoginPage() {
   const [localError, setLocalError] = useState<string | null>(null);
   const { login } = useAuth();
   const router = useRouter();
+  useLocale();
 
   async function handleSubmit(e: FormEvent) {
     e.preventDefault();
@@ -33,7 +36,7 @@ export default function LoginPage() {
       await login(key.trim());
       router.push("/dashboard");
     } catch {
-      setLocalError("Invalid management key. Please try again.");
+      setLocalError(t("login.error"));
     } finally {
       setIsSubmitting(false);
     }
@@ -44,10 +47,10 @@ export default function LoginPage() {
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
           <CardTitle className="text-xl">
-            CLI Proxy API Management
+            {t("login.title")}
           </CardTitle>
           <CardDescription>
-            Enter your management key to continue
+            {t("login.description")}
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -58,11 +61,11 @@ export default function LoginPage() {
               </Alert>
             )}
             <Field>
-              <FieldLabel htmlFor="mgmt-key">Management Key</FieldLabel>
+              <FieldLabel htmlFor="mgmt-key">{t("login.label")}</FieldLabel>
               <Input
                 id="mgmt-key"
                 type="password"
-                placeholder="Enter management key"
+                placeholder={t("login.placeholder")}
                 value={key}
                 onChange={(e) => setKey(e.target.value)}
                 disabled={isSubmitting}
@@ -70,7 +73,7 @@ export default function LoginPage() {
               />
             </Field>
             <Button type="submit" disabled={isSubmitting || !key.trim()}>
-              {isSubmitting ? "Verifying..." : "Sign In"}
+              {isSubmitting ? t("login.verifying") : t("login.signIn")}
             </Button>
           </form>
         </CardContent>
