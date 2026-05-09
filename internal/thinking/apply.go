@@ -11,13 +11,15 @@ import (
 
 // providerAppliers maps provider names to their ProviderApplier implementations.
 var providerAppliers = map[string]ProviderApplier{
-	"gemini":      nil,
-	"gemini-cli":  nil,
-	"claude":      nil,
-	"openai":      nil,
-	"codex":       nil,
-	"antigravity": nil,
-	"kimi":        nil,
+	"gemini":       nil,
+	"gemini-cli":   nil,
+	"claude":       nil,
+	"openai":       nil,
+	"codex":        nil,
+	"antigravity":  nil,
+	"kimi":         nil,
+	"codebuddy":    nil,
+	"codebuddy-ai": nil,
 }
 
 // GetProviderApplier returns the ProviderApplier for the given provider name.
@@ -322,12 +324,11 @@ func extractThinkingConfig(body []byte, provider string) ThinkingConfig {
 		return extractClaudeConfig(body)
 	case "gemini", "gemini-cli", "antigravity":
 		return extractGeminiConfig(body, provider)
-	case "openai":
+	case "openai", "codebuddy", "codebuddy-ai":
 		return extractOpenAIConfig(body)
 	case "codex":
 		return extractCodexConfig(body)
 	case "kimi":
-		// Kimi uses OpenAI-compatible reasoning_effort format
 		return extractOpenAIConfig(body)
 	default:
 		return ThinkingConfig{}

@@ -35,7 +35,7 @@ func StripThinkingConfig(body []byte, provider string) []byte {
 		paths = []string{"generationConfig.thinkingConfig"}
 	case "gemini-cli", "antigravity":
 		paths = []string{"request.generationConfig.thinkingConfig"}
-	case "openai":
+	case "openai", "codebuddy", "codebuddy-ai":
 		paths = []string{"reasoning_effort"}
 	case "kimi":
 		paths = []string{

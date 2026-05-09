@@ -17,6 +17,7 @@ import (
 	"github.com/router-for-me/CLIProxyAPI/v6/internal/config"
 	"github.com/router-for-me/CLIProxyAPI/v6/internal/runtime/executor/helps"
 	"github.com/router-for-me/CLIProxyAPI/v6/internal/thinking"
+	"github.com/router-for-me/CLIProxyAPI/v6/internal/util"
 	cliproxyauth "github.com/router-for-me/CLIProxyAPI/v6/sdk/cliproxy/auth"
 	cliproxyexecutor "github.com/router-for-me/CLIProxyAPI/v6/sdk/cliproxy/executor"
 	"github.com/router-for-me/CLIProxyAPI/v6/sdk/cliproxy/usage"
@@ -174,28 +175,27 @@ func (e *JoyCodeExecutor) ExecuteStream(ctx context.Context, auth *cliproxyauth.
 				continue
 			}
 
-			var data []byte
+			var data string
 			if strings.HasPrefix(line, "data: ") {
-				data = []byte(strings.TrimPrefix(line, "data: "))
+				data = strings.TrimPrefix(line, "data: ")
 			} else if strings.HasPrefix(line, "data:") {
-				data = []byte(strings.TrimPrefix(line, "data:"))
+				data = strings.TrimPrefix(line, "data:")
 			} else {
 				continue
 			}
 
-			if string(data) == "[DONE]" {
+			if data == "[DONE]" {
 				break
 			}
 
-			if pt := gjson.GetBytes(data, "usage.prompt_tokens").Int(); pt > 0 {
+			if pt := gjson.Get(data, "usage.prompt_tokens").Int(); pt > 0 {
 				totalPromptTokens = pt
 			}
-			if ct := gjson.GetBytes(data, "usage.completion_tokens").Int(); ct > 0 {
+			if ct := gjson.Get(data, "usage.completion_tokens").Int(); ct > 0 {
 				totalCompletionTokens = ct
 			}
 
-			chunk := []byte("data: " + string(data) + "\n\n")
-			translatedChunks := sdktranslator.TranslateStream(ctx, to, from, req.Model, opts.OriginalRequest, req.Payload, chunk, &streamParam)
+			translatedChunks := sdktranslator.TranslateStream(ctx, to, from, req.Model, opts.OriginalRequest, req.Payload, []byte(data), &streamParam)
 			for _, tc := range translatedChunks {
 				if len(tc) > 0 {
 					chunks <- cliproxyexecutor.StreamChunk{Payload: tc}
@@ -272,6 +272,7 @@ func buildJoyCodePayload(openaiPayload []byte, modelName string, auth *cliproxya
 		log.Errorf("joycode: failed to marshal payload: %v", err)
 		return openaiPayload
 	}
+	result = util.CleanupOrphanedRequiredInTools(result)
 	return result
 }
 
