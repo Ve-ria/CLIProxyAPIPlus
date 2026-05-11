@@ -359,6 +359,19 @@ nonstream-keepalive-interval: 0
 #   codex:
 #     - name: "gpt-5"
 #       alias: "g5"
+#   kiro:
+#     - name: "kiro-claude-opus-4-7"
+#       alias: "claude-opus-4-7"
+#       fork: true
+#     - name: "kiro-claude-opus-4-7-agentic"
+#       alias: "claude-opus-4-7-agentic"
+#       fork: true
+#     - name: "kiro-claude-sonnet-4-6"
+#       alias: "claude-sonnet-4-6"
+#       fork: true
+#     - name: "kiro-claude-sonnet-4-5"
+#       alias: "claude-sonnet-4-5"
+#       fork: true
 #   kimi:
 #     - name: "kimi-k2.5"
 #       alias: "k2.5"
