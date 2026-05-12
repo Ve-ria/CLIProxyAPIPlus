@@ -15,6 +15,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/router-for-me/CLIProxyAPI/v7/internal/buildinfo"
 	"github.com/router-for-me/CLIProxyAPI/v7/internal/config"
+	"github.com/router-for-me/CLIProxyAPI/v7/internal/usage"
 	sdkAuth "github.com/router-for-me/CLIProxyAPI/v7/sdk/auth"
 	coreauth "github.com/router-for-me/CLIProxyAPI/v7/sdk/cliproxy/auth"
 	"golang.org/x/crypto/bcrypt"
@@ -40,6 +41,8 @@ type Handler struct {
 	attemptsMu          sync.Mutex
 	failedAttempts      map[string]*attemptInfo // keyed by client IP
 	authManager         *coreauth.Manager
+	sdkAuthManager      *sdkAuth.Manager
+	usageStats          *usage.RequestStatistics
 	tokenStore          coreauth.Store
 	localPassword       string
 	allowRemoteOverride bool
@@ -59,6 +62,7 @@ func NewHandler(cfg *config.Config, configFilePath string, manager *coreauth.Man
 		failedAttempts:      make(map[string]*attemptInfo),
 		authManager:         manager,
 		tokenStore:          sdkAuth.GetTokenStore(),
+			usageStats:          usage.GetRequestStatistics(),
 		allowRemoteOverride: envSecret != "",
 		envSecret:           envSecret,
 	}
@@ -333,3 +337,9 @@ func (h *Handler) updateStringField(c *gin.Context, set func(string)) {
 	set(*body.Value)
 	h.persist(c)
 }
+
+// SetSDKAuthManager sets the SDK auth manager for OAuth provider operations.
+func (h *Handler) SetSDKAuthManager(manager *sdkAuth.Manager) { h.sdkAuthManager = manager }
+
+// SetUsageStats sets the usage statistics tracker for the management handler.
+func (h *Handler) SetUsageStats(stats *usage.RequestStatistics) { h.usageStats = stats }
